@@ -1,0 +1,20 @@
+per_letivo,epoca,disciplina,inicio,turma,dia semana 1,dia semana 2,hora inicial,hora final,unidade,numero.sala,tipo.sala ,capacidade.sala,vagas.ofe,vagas.pre,docente
+20181,1,LETE87,20151,T03P00E00,9,Horario a Com,0,2300,LET,0,NULL,NULL,2,1,Simone Bueno Borges da Silva            
+20181,1,LETE87,20151,T04P00E00,9,Horario a Com,0,2300,LET,0,NULL,NULL,1,0,Jose Henrique de Freitas Santos         
+20181,1,LETE87,20151,T05P00E00,9,Horario a Com,0,2300,LET,0,NULL,NULL,1,0,Marcio Ricardo Coelho Muniz             
+20181,1,LETE87,20151,T06P00E00,9,Horario a Com,0,2300,LET,0,NULL,NULL,2,1,Docente Visitante                       
+20181,1,LETE87,20151,T07P00E00,9,Horario a Com,0,2300,LET,0,NULL,NULL,2,1,Ana Lucia Silva Souza                   
+20181,1,LETE87,20151,T08P00E00,9,Horario a Com,0,2300,LET,0,NULL,NULL,1,1,Alvanita Almeida Santos                 
+20181,1,LETE87,20151,T09P00E00,9,Horario a Com,0,2300,LET,0,NULL,NULL,1,1,Julio Neves Pereira                     
+20181,1,LETE87,20151,T10P00E00,9,Horario a Com,0,2300,LET,0,NULL,NULL,2,0,Simone Souza de Assumpcao               
+20181,1,LETE87,20151,T11P00E00,9,Horario a Com,0,2300,LET,0,NULL,NULL,1,1,Daniele de Oliveira                     
+20181,1,LETE87,20151,T12P00E00,9,Horario a Com,0,2300,LET,0,NULL,NULL,1,0,Juliana Escalier Ludwig Gayer           
+20181,1,LETE87,20151,T13P00E00,9,Horario a Com,0,2300,LET,0,NULL,NULL,1,1,Suzane Lima Costa                       
+20181,1,LETE87,20151,T14P00E00,9,Horario a Com,0,2300,LET,0,NULL,NULL,1,1,Jose Henrique de Freitas Santos         
+20181,1,LETE87,20151,T15P00E00,9,Horario a Com,0,2300,LET,0,NULL,NULL,2,1,Daniele de Oliveira                     
+20181,1,LETE87,20151,T16P00E00,9,Horario a Com,0,2300,LET,0,NULL,NULL,2,1,Simone Bueno Borges da Silva            
+20181,1,LETE87,20151,T17P00E00,9,Horario a Com,0,2300,LET,0,NULL,NULL,2,2,Simone Souza de Assumpcao               
+20181,1,LETE87,20151,T18P00E00,9,Horario a Com,0,2300,LET,0,NULL,NULL,2,2,Ana Lucia Silva Souza                   
+20181,1,LETE87,20151,T19P00E00,9,Horario a Com,0,2300,LET,0,NULL,NULL,1,0,Docente Visitante                       
+20181,1,LETE87,20151,T20P00E00,9,Horario a Com,0,2300,LET,0,NULL,NULL,2,2,Monica de Menezes Santos                
+20181,1,LETE87,20151,T21P00E00,9,Horario a Com,0,2300,LET,0,NULL,NULL,2,2,Juliana Escalier Ludwig Gayer           
