@@ -10,15 +10,15 @@ use Illuminate\Routing\Controller as BaseController;
 
 class PlanejamentoController extends BaseController
 {
-    public function show()
+
+    public function index()
     {
         $semestres = DB::table('semestre')
-                              ->select('ano', 'semestre')
-                              ->where('finalizado', 1)
-                              ->orderBy('ano', 'semestre')
-                              ->get();
-
-        return view('vizualizar', ['semestres' => $semestres]);
+                        ->select('ano', 'semestre')
+                        ->where('finalizado', 1)
+                        ->orderBy('ano', 'semestre')
+                        ->get();
+        return view('index', ['semestres' => $semestres]);
     }
 
     public function obter_unidades(Request $request)
@@ -95,6 +95,16 @@ class PlanejamentoController extends BaseController
         }
 
         return $result;
+    }
+
+    public function import()
+    {
+        return view('adm.planejamento.import');
+    }
+
+    public function list()
+    {
+        return view('adm.planejamento.list');
     }
 
 }

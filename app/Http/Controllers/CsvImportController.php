@@ -10,9 +10,6 @@ use Redirect;
 
 class CsvImportController extends BaseController
 {
-    public function show() {
-        return view('importar');
-    }
     /**
      * [POST] Form which will submit the file
      */
@@ -51,22 +48,28 @@ class CsvImportController extends BaseController
                 ];
                 // Lets construct our importer
                 $csv_importer = new CsvFileImporter($headers, true);
-
-                // Import our csv file
-                if ($csv_importer->import($csv_file)) {
-                    // Provide success message to the user
-                    $message = 'Your file has been successfully imported!';
-                } else {
-                    $message = 'Your file did not import';
+                try {
+                    // Import our csv file
+                    if ($csv_importer->import($csv_file)) {
+                        // Provide success message to the user
+                        $message = 'Arquivo importado com sucesso!';
+                        $session = 'success';
+                    } else {
+                        $message = 'Falha ao importar o arquivo!';
+                        $session = 'error';
+                    }
+                } catch (\Exception $e) {
+                    $message = $e->getMessage();
+                    $session = 'error';
                 }
-
             } else {
                 // Provide a meaningful error message to the user
                 // Perform any logging if necessary
-                $message = 'You must provide a CSV file for import.';
+                $message = 'Você deve informar um arquivo CSV.';
+                $session = 'error';
             }
 
-            return Redirect::back()->with('message', $message);
+            return Redirect::back()->with($session, $message);
         }
     }
 }

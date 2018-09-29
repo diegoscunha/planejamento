@@ -2,6 +2,12 @@
 
 @section('content')
 <div class="container">
+  <div class="row justify-content-center">
+      <div class="col-md-8">
+          <div class="card">
+              <div class="card-header">Importar Planejamento</div>
+
+              <div class="card-body">
     @if ($errors->any())
     <div class="alert alert-danger" role="alert">
         <ul>
@@ -11,9 +17,14 @@
         </ul>
     </div>
     @endif
-    @if (session('message'))
+    @if (session('success'))
     <div class="alert alert-success" role="alert">
-        {{ session('message') }}
+        {{ session('success') }}
+    </div>
+    @endif
+    @if (session('error'))
+    <div class="alert alert-danger" role="alert">
+        {{ session('error') }}
     </div>
     @endif
     <form method="post" action="{{ route('importar') }}" enctype="multipart/form-data" novalidate>
@@ -33,5 +44,9 @@
       <button class="btn btn-primary" type="submit">Enviar</button>
       @csrf
     </form>
+  </div>
+</div>
+</div>
+</div>
 </div>
 @endsection

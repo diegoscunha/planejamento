@@ -11,17 +11,20 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'PlanejamentoController@index')->middleware('guest')->name('index');
 
-Route::get('/importar/planejamento', 'Importacao@show')->middleware('auth')->name('importar');
-Route::post('/importar/planejamento', 'CsvImportController@store')->middleware('auth')->name('importar');
+Route::get('/planejamento/obter-unidades/json', 'PlanejamentoController@obter_unidades');
+Route::get('/planejamento/obter-salas/json', 'PlanejamentoController@obter_salas');
+Route::get('/planejamento/consultar-disciplinas/json', 'PlanejamentoController@obter_disciplinas');
 
-Route::get('/visualizar', 'PlanejamentoController@show')->name('vizualizar');
-Route::get('/obter-unidades', 'PlanejamentoController@obter_unidades');
-Route::get('/obter-salas', 'PlanejamentoController@obter_salas');
-Route::get('/consultar-disciplinas', 'PlanejamentoController@obter_disciplinas')->name('consultar');
+Route::get('/planejamento', 'PlanejamentoController@list')->middleware('auth')->name('listar-planejamento');
+Route::get('/planejamento/importar', 'PlanejamentoController@import')->middleware('auth')->name('importar-planejamento');
+Route::post('/planejamento/importar', 'CsvImportController@store')->middleware('auth')->name('importar');
+
+
+
+
+
 
 Auth::routes();
 

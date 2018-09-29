@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="{{ asset('dhtmlxScheduler_v5.0.0/codebase/dhtmlxscheduler_material.css') }}" type="text/css" charset="utf-8">
     <script src="{{ asset('dhtmlxScheduler_v5.0.0/codebase/locale/locale_pt.js') }}" type="text/javascript" charset="utf-8"></script>
 
+    <script src="{{ asset('js/script.js') }}" type="text/javascript" charset="utf-8"></script>
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -29,7 +31,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body onload="init(null);">
+<body onload="init_consultar(null);">
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
             <div class="container">
@@ -51,7 +53,7 @@
                         <!-- Authentication Links -->
                         @guest
                             <li><a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a></li>
-                            <li><a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a></li>
+                            <!-- <li><a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a></li> -->
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
