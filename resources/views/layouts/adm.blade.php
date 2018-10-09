@@ -5,6 +5,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript"></script>
+    <script src="{{ asset('dhtmlxScheduler_v5.0.0/codebase/dhtmlxscheduler.js') }}" type="text/javascript" charset="utf-8"></script>
+    <script src="{{ asset('dhtmlxScheduler_v5.0.0/codebase/ext/dhtmlxscheduler_active_links.js') }}" type="text/javascript" charset="utf-8"></script>
+    <script src="{{ asset('dhtmlxScheduler_v5.0.0/codebase/ext/dhtmlxscheduler_agenda_view.js') }}"></script>
+    <script src="{{ asset('dhtmlxScheduler_v5.0.0/codebase/ext/dhtmlxscheduler_readonly.js') }}"></script>
+    <script src="https://export.dhtmlx.com/scheduler/api.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="{{ asset('dhtmlxScheduler_v5.0.0/codebase/dhtmlxscheduler_material.css') }}" type="text/css" charset="utf-8">
+    <script src="{{ asset('dhtmlxScheduler_v5.0.0/codebase/locale/locale_pt.js') }}" type="text/javascript" charset="utf-8"></script>
+
+    <script src="{{ asset('js/script.js') }}" type="text/javascript" charset="utf-8"></script>
+
+    <link rel="stylesheet" href="http://cdn.dhtmlx.com/edge/dhtmlx.css" type="text/css">
+    <script src="http://cdn.dhtmlx.com/edge/dhtmlx.js" type="text/javascript"></script>
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -20,7 +34,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body>
+<body onload="init_ajustar(null); init_grid_ajuste();">
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
             <div class="container">
