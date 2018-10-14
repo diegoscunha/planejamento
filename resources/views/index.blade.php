@@ -1,4 +1,4 @@
-@extends('layouts.guest')
+@extends('layouts_old.guest')
 
 @section('content')
 <script type="text/javascript">

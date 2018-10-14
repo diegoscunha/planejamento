@@ -87,7 +87,19 @@ class PlanejamentoController extends BaseController
 
     public function import()
     {
-        return view('adm.planejamento.import');
+        $anos = [];
+        $ano_atual = (int)date('Y');
+        $anos[] = $ano_atual - 2;
+        $anos[] = $ano_atual - 1;
+        $anos[] = $ano_atual;
+        $anos[] = $ano_atual + 1;
+        $anos[] = $ano_atual + 2;
+        $breadcrumb = [
+              'Home' => route('adm'),
+              'Planejamentos' => route('listar-planejamento'),
+              'Adicionar Planejamento' => ''
+        ];
+        return view('adm.planejamento.import', ['breadcrumb' => $breadcrumb, 'anos' => $anos]);
     }
 
     public function list()
@@ -98,7 +110,7 @@ class PlanejamentoController extends BaseController
                               sum(case when t.descricao='disciplinas' then total else 0 end) as disciplinas,
                               sum(case when t.descricao='disciplinas_nao_alocadas' then total else 0 end) as disciplinas_nao_alocadas,
                               s.status
-                              from semestre s
+                              from semestres s
                               left join (select unid.periodo_letivo, 'unidades' as descricao, count(*) as total
                       		    from (select distinct(unidade), periodo_letivo from calendars) unid group by unid.periodo_letivo
                       		    union
@@ -110,7 +122,11 @@ class PlanejamentoController extends BaseController
                               on concat(s.ano,s.semestre)=t.periodo_letivo
                               group by s.ano, s.semestre, t.periodo_letivo
                               order by s.ano desc, s.semestre desc");
-        return view('adm.planejamento.list', ['planejamentos' => $result]);
+        $breadcrumb = [
+              'Home' => route('adm'),
+              'Planejamentos' => ''
+        ];
+        return view('adm.planejamento.list', ['planejamentos' => $result, 'breadcrumb' => $breadcrumb]);
     }
 
     public function ajustar($periodo_letivo)

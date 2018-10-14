@@ -13,19 +13,24 @@
 
 Route::get('/', 'PlanejamentoController@index')->name('index');
 
+Route::get('/adm', 'HomeController@index')->name('adm');
+
+Route::get('/adm/planejamento', 'PlanejamentoController@list')->middleware('auth')->name('listar-planejamento');
+Route::get('/adm/planejamento/adicionar', 'PlanejamentoController@import')->middleware('auth')->name('importar-planejamento');
+Route::post('/adm/planejamento/importar', 'CsvImportController@store')->middleware('auth')->name('importar');
+Route::get('/planejamento/ajustar-planejamento/{periodo_letivo}', 'PlanejamentoController@ajustar')->where('periodo_letivo', '[0-9]+')->middleware('auth')->name('ajustar-planejamento');
+
+
 Route::get('/planejamento/obter-unidades/json', 'PlanejamentoController@obter_unidades');
 Route::get('/planejamento/obter-salas/json', 'PlanejamentoController@obter_salas');
 Route::get('/planejamento/consultar-disciplinas/json', 'PlanejamentoController@obter_disciplinas');
 
-Route::get('/planejamento', 'PlanejamentoController@list')->middleware('auth')->name('listar-planejamento');
-Route::get('/planejamento/importar', 'PlanejamentoController@import')->middleware('auth')->name('importar-planejamento');
-Route::post('/planejamento/importar', 'CsvImportController@store')->middleware('auth')->name('importar');
-Route::get('/planejamento/ajustar-planejamento/{periodo_letivo}', 'PlanejamentoController@ajustar')->where('periodo_letivo', '[0-9]+')->middleware('auth')->name('ajustar-planejamento');
 
+Route::get('/api/planejamento/isexist/{ano}/{semestre}', 'PlanejamentoController@isExist')->where('ano', '[0-9]+')->where('semestre', '[1-2]')->middleware('auth');
 Route::post('/api/planejamento', 'PlanejamentoController@update');
 Route::get('/api/planejamento/{periodo_letivo}/nao-alocadas/{unidade}', 'PlanejamentoController@getNaoAlocadas')->where('periodo_letivo', '[0-9]+')->middleware('auth');
 Route::post('/api/planejamento/{periodo_letivo}/nao-alocadas/{unidade}/alocar', 'PlanejamentoController@alocar')->where('periodo_letivo', '[0-9]+')->middleware('auth');
 
-Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();

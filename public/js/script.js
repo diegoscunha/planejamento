@@ -1,5 +1,4 @@
 $(document).ready(function() {
-
     $('#alocar').click(function(evt) {
         evt.preventDefault();
         var inputs = $('.formmodal'),
@@ -67,12 +66,15 @@ $(document).ready(function() {
             semestre = $('#semestre').val().replace('.', '');
             unidade = $('#unidade').val();
             var salas = ajax('GET', '/planejamento/obter-salas/json', {semestre: semestre, unidade: unidade});
-            var disc = ajax('GET', '/api/planejamento/' + semestre + '/nao-alocadas/' + unidade);
+
             $.each(salas, function(i, sala) {
                 $('#sala').append($('<option>', {value: sala.numero_sala, text: sala.numero_sala}));
                 $('#modal_sala').append($('<option>', {value: sala.numero_sala, text: sala.numero_sala}));
             });
-            refresh_grid(disc);
+            if (window.location.href!="http://localhost:8000/") {
+                var disc = ajax('GET', '/api/planejamento/' + semestre + '/nao-alocadas/' + unidade);
+                refresh_grid(disc);
+            }
         }
     });
 
@@ -108,7 +110,7 @@ function ajax(method, url, object) {
             events = data;
         },
         error: function(msg){
-            alert(msg);
+            swal({text: msg});
         }
     });
     return events;
