@@ -15,7 +15,7 @@
   <meta name="author" content="Łukasz Holeczek">
   <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
   <link rel="shortcut icon" href="{{ asset('img/favicon.png') }}">
-  <title>CoreUI - Open Source Bootstrap Admin Template</title>
+  <title>{{ config('app.name', 'Laravel') }}</title>
 
   <!-- Icons -->
   <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">
@@ -24,7 +24,7 @@
   <!-- Main styles for this application -->
   <link href="{{ asset('css/style.css') }}" rel="stylesheet">
   <!-- Styles required by this views -->
-  <link rel="stylesheet" href="{{ asset('css/custom.css') }}">  
+  <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
 </head>
 <!-- BODY options, add following classes to body to change options
 '.header-fixed' - Fixed Header
@@ -43,7 +43,7 @@
 
 <body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
   @include('core.navbar')
-  
+
   <div class="app-body">
     @include('core.sidebar')
     <!-- Main content -->

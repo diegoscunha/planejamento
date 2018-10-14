@@ -1,4 +1,4 @@
-@extends('layouts.adm')
+@extends('samples')
 
 @section('content')
 <script type="text/javascript">
@@ -164,7 +164,7 @@
         <div class="col-md-6">
           Visualizar
           <br>
-          <iframe name="interno" style="height: 100%;width: 100%;" marginwidth="0" marginheight="0" frameborder="0" scrollbar="no" scrolling="no" src="{{ route('index') }}"></iframe>
+          <!--<iframe name="interno" style="height: 100%;width: 100%;" marginwidth="0" marginheight="0" frameborder="0" scrollbar="no" scrolling="no" src="{{ route('index') }}"></iframe>-->
         </div>
     </div>
 </div>

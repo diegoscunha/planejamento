@@ -13,7 +13,7 @@ class PlanejamentoController extends BaseController
 
     public function index()
     {
-        $semestres = DB::table('semestre')
+        $semestres = DB::table('semestres')
                         ->select('ano', 'semestre')
                         ->where('status', 1)
                         ->orderBy('ano', 'semestre')
@@ -108,20 +108,34 @@ class PlanejamentoController extends BaseController
                               t.periodo_letivo,
                               sum(case when t.descricao='unidades' then total else 0 end) as unidades,
                               sum(case when t.descricao='disciplinas' then total else 0 end) as disciplinas,
-                              sum(case when t.descricao='disciplinas_nao_alocadas' then total else 0 end) as disciplinas_nao_alocadas,
+                              sum(case when t.descricao='aulas_nao_alocadas' then total else 0 end) as aulas_nao_alocadas,
                               s.status
                               from semestres s
                               left join (select unid.periodo_letivo, 'unidades' as descricao, count(*) as total
-                      		    from (select distinct(unidade), periodo_letivo from calendars) unid group by unid.periodo_letivo
+                      		    from (select distinct(unidade), periodo_letivo from calendars
+                              where unidade in(select codigo from unidades)) unid group by unid.periodo_letivo
                       		    union
                       		    select dis.periodo_letivo, 'disciplinas' as descricao, count(*) as total
-                      		    from (select distinct(codigo_disciplina), periodo_letivo from calendars) dis group by dis.periodo_letivo
+                      		    from (select distinct(codigo_disciplina), periodo_letivo from calendars
+                              where unidade in(select codigo from unidades)) dis group by dis.periodo_letivo
                       		    union
-                      		    select nao.periodo_letivo, 'disciplinas_nao_alocadas' as nao_alocadas, count(*) as total
-                      		    from (select distinct(codigo_disciplina), periodo_letivo from calendars where numero_sala='0') nao group by nao.periodo_letivo) t
+                      		    select nao.periodo_letivo, 'aulas_nao_alocadas' as nao_alocadas, count(*) as total
+                      		    from (select distinct(codigo_disciplina), periodo_letivo from calendars where numero_sala='0'
+                              and unidade in(select codigo from unidades)) nao group by nao.periodo_letivo) t
                               on concat(s.ano,s.semestre)=t.periodo_letivo
                               group by s.ano, s.semestre, t.periodo_letivo
                               order by s.ano desc, s.semestre desc");
+        foreach($result as $value) {
+            $x = $value->aulas_nao_alocadas * 100;
+            $value->percent = (int)(100 - ($x / $value->disciplinas));
+            if($value->percent <= 40)
+                $value->percent_class = 'bg-danger';
+            elseif ($value->percent >= 40 && $value->percent <= 80)
+                $value->percent_class = 'bg-warning';
+            else
+                $value->percent_class = 'bg-success';
+        }
+
         $breadcrumb = [
               'Home' => route('adm'),
               'Planejamentos' => ''
@@ -212,5 +226,30 @@ class PlanejamentoController extends BaseController
         $response['message'] = 'Registro salvo com sucesso!';
 
         return response()->json($response, Response::HTTP_OK);
+    }
+
+    public function delete(Request $req, $periodo_letivo)
+    {
+        if(!empty($periodo_letivo)) {
+            DB::transaction(function () use ($periodo_letivo) {
+                $ano = substr($periodo_letivo, 0, 4);
+                $semestre = substr($periodo_letivo, 4);
+                DB::table('semestres')->where('ano', $ano)->where('semestre', $semestre)->delete();
+                DB::table('calendars')->where('periodo_letivo', $ano.$semestre)->delete();
+            });
+        }
+
+        $req->session()->flash('message', 'Planejamento excluído com sucesso!');
+        return redirect()->route('listar-planejamento');
+    }
+
+    public function detalhes($periodo_letivo)
+    {
+        $breadcrumb = [
+              'Home' => route('adm'),
+              'Planejamentos' => route('listar-planejamento'),
+              'Detalhes Planejamento' => ''
+        ];
+        return view('adm.planejamento.detalhes', ['breadcrumb' => $breadcrumb]);
     }
 }
