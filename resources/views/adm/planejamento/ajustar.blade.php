@@ -8,12 +8,16 @@
     }
 </script>
 <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <h1 class="text-center">Ajuste de Planejamento {{ $semestre }}</h1>
+  <div class="card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="card-title mb-0">Ajustar Planejamento {{ $semestre }}</h1>
+          <div class="small text-muted">Realize ajustes nas alocações das turmas</div>
+        </div>
       </div>
-    </div>
-    <div class="row">
+      <br>
+      <div class="row">
         <div class="col-md-6">
             <form id="form-pesquisar" action="#" class="needs-validation" novalidate>
                 <input type="hidden" id="semestre" name="semestre" value="{{ $semestre }}">
@@ -23,7 +27,7 @@
                         <select id="unidade" name="unidade" class="form-control form-control-sm filtro" required>
                             <option value="">:: Selecione ::</option>
                             @foreach($unidades as $unidade)
-                            <option value="{{ $unidade->unidade }}">{{ $unidade->unidade }}</option>
+                            <option value="{{ $unidade->unidade }}">{{ $unidade->unidade . ' - ' . $unidade->nome }}</option>
                             @endforeach
                         </select>
                         <div class="invalid-feedback">
@@ -49,7 +53,7 @@
         </div>
         <div class="col-md-6">
           <h5>Disciplinas Não Alocadas</h5>
-          <div id="gridbox" style="width:600px;height:150px;"></div>
+          <div id="gridbox" style="width:height:150px;"></div>
           <!-- Modal -->
           <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -75,7 +79,7 @@
                         <select id="modal_unidade" name="modal_unidade" class="form-control form-control-sm formmodal" required>
                             <option value="">:: Selecione ::</option>
                             @foreach($unidades as $unidade)
-                            <option value="{{ $unidade->unidade }}">{{ $unidade->unidade }}</option>
+                            <option value="{{ $unidade->unidade }}">{{ $unidade->unidade . ' - ' . $unidade->nome }}</option>
                             @endforeach
                         </select>
                         <div class="invalid-feedback">
@@ -114,20 +118,18 @@
                       <label>Horário: </label>
                       <select id="modal_hora_inicial" name="modal_hora_inicial" class="form-control form-control-sm formmodal" required>
                           <option value="">:: Selecione ::</option>
-                          <option value="800">08:00</option>
-                          <option value="850">08:50</option>
-                          <option value="940">09:40</option>
-                          <option value="1030">10:30</option>
+                          @foreach($horas as $key => $hora)
+                          <option value="{{ $key }}">{{ $hora }}</option>
+                          @endforeach
                       </select>
                       <div class="invalid-feedback">
                           Por favor, selecione um horário.
                       </div>
                       <select id="modal_hora_final" name="modal_hora_final" class="form-control form-control-sm formmodal" required>
                           <option value="">:: Selecione ::</option>
-                          <option value="800">08:00</option>
-                          <option value="850">08:50</option>
-                          <option value="940">09:40</option>
-                          <option value="1030">10:30</option>
+                          @foreach($horas as $key => $hora)
+                          <option value="{{ $key }}">{{ $hora }}</option>
+                          @endforeach
                       </select>
                       <div class="invalid-feedback">
                           Por favor, selecione um horário.
@@ -162,7 +164,7 @@
             </div>
         </div>
         <div class="col-md-6">
-          Visualizar
+          <!-- Visualizar -->
           <br>
           <!--<iframe name="interno" style="height: 100%;width: 100%;" marginwidth="0" marginheight="0" frameborder="0" scrollbar="no" scrolling="no" src="{{ route('index') }}"></iframe>-->
         </div>

@@ -67,7 +67,7 @@
                   <a class="btn btn-sm btn-brand btn-info" href="{{ route('detalhes-planejamento', ['semestre' => $planejamento->periodo_letivo]) }}" role="button" title="Detalhes"><i class="fa fa-eye"></i></a>
                   @if($planejamento->status==0)
                   <a class="btn btn-sm btn-brand btn-primary" href="{{ route('ajustar-planejamento', ['semestre' => $planejamento->periodo_letivo]) }}" role="button" title="Ajustes"><i class="fa fa-calendar"></i></a>
-                  <a href="{{ route('excluir-planejamento', ['periodo_letivo' => $planejamento->periodo_letivo]) }}" class="btn btn-sm btn-brand btn-danger" role="button" title="Excluir">
+                  <a href="{{ route('excluir-planejamento', ['periodo_letivo' => $planejamento->periodo_letivo]) }}" class="btn btn-sm btn-brand btn-danger excluir-planejamento" role="button" title="Excluir">
                     <i class="fa fa-trash"></i>
                   </a>
                   @endif

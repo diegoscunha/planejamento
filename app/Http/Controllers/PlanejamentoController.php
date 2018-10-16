@@ -148,14 +148,21 @@ class PlanejamentoController extends BaseController
     {
         $semestre = substr_replace($periodo_letivo, '.', 4, 0);
         $unidades = DB::table('calendars')
-                        ->select('unidade')
+                        ->select('unidade', 'unidades.nome')
+                        ->join('unidades', 'unidades.codigo', '=', 'calendars.unidade')
                         ->where('periodo_letivo', $periodo_letivo)
                         ->where('numero_sala', '<>', '0')
-                        ->groupBy('unidade')
+                        ->groupBy('unidade', 'unidades.nome')
                         ->orderBy('unidade')
                         ->get();
         $dias = \App\DiaSemana::$dias;
-        return view('adm.planejamento.ajustar', ['semestre' => $semestre, 'unidades' => $unidades, 'dias' => $dias]);
+        $horas = \App\Hora::$horas;
+        $breadcrumb = [
+              'Home' => route('adm'),
+              'Planejamentos' => route('listar-planejamento'),
+              'Ajuste de Planejamento' => ''
+        ];
+        return view('adm.planejamento.ajustar', ['breadcrumb' => $breadcrumb, 'semestre' => $semestre, 'unidades' => $unidades, 'dias' => $dias, 'horas' => $horas]);
     }
 
     public function update(Request $req)

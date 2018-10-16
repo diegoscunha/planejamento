@@ -228,9 +228,25 @@ function init_ajustar(events) {
     }, true);
 
     dp.attachEvent("onAfterUpdate", function(id, action, tid, response){
-        console.log(response);
-        var events = buscar_disciplinas();
-        refresh_calendar(events);
+      swal({
+        title: "Você tem certeza?",
+        text: "O registo será salvo com os dados informados!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((resposta) => {
+        if (resposta) {
+            $('body').loading({
+                message: 'Carregando...'
+            });
+            var events = buscar_disciplinas();
+            refresh_calendar(events);
+            swal("Registro salvo com sucesso!", {
+              icon: "success",
+            });
+            $('body').loading('stop');
+          }
+      });
     });
 }
 

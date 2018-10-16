@@ -8,7 +8,7 @@
 <!-- CoreUI main scripts -->
 <script src="{{ asset('js/app.js')}}"></script>
 
-script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript"></script>
 <script src="{{ asset('dhtmlxScheduler_v5.0.0/codebase/dhtmlxscheduler.js') }}" type="text/javascript" charset="utf-8"></script>
 <script src="{{ asset('dhtmlxScheduler_v5.0.0/codebase/ext/dhtmlxscheduler_active_links.js') }}" type="text/javascript" charset="utf-8"></script>
 <script src="{{ asset('dhtmlxScheduler_v5.0.0/codebase/ext/dhtmlxscheduler_agenda_view.js') }}"></script>

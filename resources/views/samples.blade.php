@@ -15,10 +15,16 @@
   <meta name="author" content="Łukasz Holeczek">
   <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
   <link rel="shortcut icon" href="{{ asset('img/favicon.png') }}">
+
+  <!-- CSRF Token -->
+	<meta name="csrf-token" content="{{ csrf_token() }}">
+
   <title>{{ config('app.name', 'Laravel') }}</title>
 
   <!-- Grid -->
   <link rel="stylesheet" href="http://cdn.dhtmlx.com/edge/dhtmlx.css" type="text/css">
+
+  <link href="{{ asset('css/jquery.loading.min.css') }}" rel="stylesheet">
 
   <!-- Icons -->
   <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">

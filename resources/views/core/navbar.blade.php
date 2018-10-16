@@ -18,7 +18,7 @@
       </a>
       <div class="dropdown-menu dropdown-menu-right">
         <div class="dropdown-header text-center">
-          <strong>{{ auth()->user()->name }}'s Account</strong>
+          <strong>{{ auth()->user()->name }}</strong>
         </div>
         <a class="dropdown-item" href="#"><i class="fa fa-key"></i> Alterar senha</a>
         <div class="dropdown-header text-center">

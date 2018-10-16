@@ -14,8 +14,7 @@ $(document).ready(function() {
 
         if (isValid) {
             $('body').loading({
-                message: 'Carregando...',
-                stoppable: true
+                message: 'Carregando...'
             });
             var events = buscar_disciplinas();
             refresh_calendar(events);
