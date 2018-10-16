@@ -27,7 +27,6 @@ Route::get('/planejamento/obter-unidades/json', 'PlanejamentoController@obter_un
 Route::get('/planejamento/obter-salas/json', 'PlanejamentoController@obter_salas');
 Route::get('/planejamento/consultar-disciplinas/json', 'PlanejamentoController@obter_disciplinas');
 
-
 Route::get('/api/planejamento/isexist/{ano}/{semestre}', 'PlanejamentoController@isExist')->where('ano', '[0-9]+')->where('semestre', '[1-2]')->middleware('auth');
 Route::post('/api/planejamento', 'PlanejamentoController@update');
 Route::get('/api/planejamento/{periodo_letivo}/nao-alocadas/{unidade}', 'PlanejamentoController@getNaoAlocadas')->where('periodo_letivo', '[0-9]+')->middleware('auth');

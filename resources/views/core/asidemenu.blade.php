@@ -7,7 +7,7 @@
 
       <!-- Tab panes -->
       <div class="tab-content">
-        <div class="tab-pane p-3 active" id="messages" role="tabpanel">
+        {{--<div class="tab-pane p-3 active" id="messages" role="tabpanel">
           <div class="message">
             <div class="py-3 pb-5 mr-3 float-left">
               <div class="avatar">
@@ -82,6 +82,6 @@
             <div class="text-truncate font-weight-bold">Lorem ipsum dolor sit amet</div>
             <small class="text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt...</small>
           </div>
-        </div>
+        </div>--}}
       </div>
     </aside>

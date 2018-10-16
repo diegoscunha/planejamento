@@ -25,10 +25,11 @@ class PlanejamentoController extends BaseController
     {
         $periodo_letivo = $request->query('semestre');
         $unidades = DB::table('calendars')
-                        ->select('unidade')
+                        ->select('unidade', 'unidades.nome')
+                        ->join('unidades', 'unidades.codigo', '=', 'calendars.unidade')
                         ->where('periodo_letivo', $periodo_letivo)
                         ->where('numero_sala', '<>', '0')
-                        ->groupBy('unidade')
+                        ->groupBy('unidade', 'unidades.nome')
                         ->orderBy('unidade')
                         ->get();
 
@@ -245,11 +246,31 @@ class PlanejamentoController extends BaseController
 
     public function detalhes($periodo_letivo)
     {
-        $breadcrumb = [
-              'Home' => route('adm'),
-              'Planejamentos' => route('listar-planejamento'),
-              'Detalhes Planejamento' => ''
-        ];
-        return view('adm.planejamento.detalhes', ['breadcrumb' => $breadcrumb]);
+          $unidades = DB::select("select t.unidade,
+                                  	   sum(case when t.descricao='qtd_salas' then total else 0 end) as qtd_salas,
+                                  	   sum(case when t.descricao='qtd_turmas' then total else 0 end) as qtd_turmas,
+                                         sum(case when t.descricao='qtd_disciplinas' then total else 0 end) as qtd_disciplinas
+                                  from (select unidade, 'qtd_salas' as descricao, count(numero_sala) as total
+                                        from (select unidade, numero_sala from calendars where periodo_letivo = ? and unidade in(select codigo from unidades) group by numero_sala, unidade) salas
+                                        group by unidade
+                                        union
+                                  	  select unidade, 'qtd_turmas' as descricao, count(turma) as total
+                                        from (select unidade, turma from calendars where periodo_letivo = ? and unidade in(select codigo from unidades) group by turma, unidade) turmas
+                                        group by unidade
+                                  	  union
+                                        select unidade, 'qtd_disciplinas' as descricao, count(codigo_disciplina) as total
+                                        from (select unidade, codigo_disciplina from calendars where periodo_letivo = ? and unidade in(select codigo from unidades) group by codigo_disciplina, unidade) disciplinas
+                                        group by unidade) t
+                                  group by unidade
+                                  order by t.unidade", [$periodo_letivo,$periodo_letivo,$periodo_letivo]);
+          $planejamento = new \stdClass();
+          $planejamento->semestre = format_periodo_letivo($periodo_letivo);
+          $planejamento->unidades = $unidades;
+          $breadcrumb = [
+                'Home' => route('adm'),
+                'Planejamentos' => route('listar-planejamento'),
+                'Detalhes Planejamento' => ''
+          ];
+          return view('adm.planejamento.detalhes', ['breadcrumb' => $breadcrumb, 'planejamento' => $planejamento]);
     }
 }

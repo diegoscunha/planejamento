@@ -17,6 +17,9 @@
   <link rel="shortcut icon" href="{{ asset('img/favicon.png') }}">
   <title>{{ config('app.name', 'Laravel') }}</title>
 
+  <!-- Grid -->
+  <link rel="stylesheet" href="http://cdn.dhtmlx.com/edge/dhtmlx.css" type="text/css">
+
   <!-- Icons -->
   <link href="{{ asset('css/font-awesome.min.css') }}" rel="stylesheet">
   <link href="{{ asset('css/simple-line-icons.css') }}" rel="stylesheet">
@@ -41,7 +44,7 @@
 '.footer-fixed'- Fixed footer
 -->
 
-<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden" onload="init_ajustar(null);init_grid_ajuste();">
   @include('core.navbar')
 
   <div class="app-body">
