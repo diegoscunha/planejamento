@@ -32,6 +32,7 @@ Route::post('/api/planejamento', 'PlanejamentoController@update');
 Route::get('/api/planejamento/{periodo_letivo}/nao-alocadas/{unidade}', 'PlanejamentoController@getNaoAlocadas')->where('periodo_letivo', '[0-9]+')->middleware('auth');
 Route::post('/api/planejamento/{periodo_letivo}/{unidade}/alocar', 'PlanejamentoController@alocar')->where('periodo_letivo', '[0-9]+')->middleware('auth');
 
-
-
 Auth::routes();
+// Registration Routes...
+$this->get('/adm/usuario/register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+$this->post('/adm/usuario/register', 'Auth\RegisterController@register');

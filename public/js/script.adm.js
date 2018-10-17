@@ -28,6 +28,12 @@ $(document).ready(function() {
             }
         }
 
+        if (parseInt($('#modal_hora_inicial').val())>=parseInt($('#modal_hora_final').val())) {
+            isValid = false;
+            $('#modal_hora_inicial').addClass("is-invalid");
+            $('#modal_hora_final').addClass("is-invalid");
+        }
+
         if (isValid) {
             swal({
               title: "Você tem certeza?",

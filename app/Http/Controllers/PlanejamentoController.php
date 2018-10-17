@@ -146,6 +146,9 @@ class PlanejamentoController extends BaseController
 
     public function ajustar($periodo_letivo)
     {
+        if (!$this->isExist($periodo_letivo) || !$this->isAdjust($periodo_letivo)) {
+            abort(404);
+        }
         $semestre = substr_replace($periodo_letivo, '.', 4, 0);
         $unidades = DB::table('calendars')
                         ->select('unidade', 'unidades.nome')
@@ -253,6 +256,9 @@ class PlanejamentoController extends BaseController
 
     public function detalhes($periodo_letivo)
     {
+          if (!$this->isExist($periodo_letivo)) {
+              abort(404);
+          }
           $unidades = DB::select("select t.unidade,
                                   	   sum(case when t.descricao='qtd_salas' then total else 0 end) as qtd_salas,
                                   	   sum(case when t.descricao='qtd_turmas' then total else 0 end) as qtd_turmas,
@@ -279,5 +285,28 @@ class PlanejamentoController extends BaseController
                 'Detalhes Planejamento' => ''
           ];
           return view('adm.planejamento.detalhes', ['breadcrumb' => $breadcrumb, 'planejamento' => $planejamento]);
+    }
+
+    private function isExist($periodo_letivo)
+    {
+        $ano = substr($periodo_letivo, 0, 4);
+        $semestre = substr($periodo_letivo, 4);
+        $result = DB::table('semestres')
+                    ->where('ano', $ano)
+                    ->where('semestre', $semestre)
+                    ->get();
+        return count($result)>0 ? true : false;
+    }
+
+    private function isAdjust($periodo_letivo)
+    {
+        $ano = substr($periodo_letivo, 0, 4);
+        $semestre = substr($periodo_letivo, 4);
+        $result = DB::table('semestres')
+                    ->where('ano', $ano)
+                    ->where('semestre', $semestre)
+                    ->where('status', '0') // status aberto
+                    ->get();
+        return count($result)>0 ? true : false;
     }
 }

@@ -123,7 +123,7 @@
                           @endforeach
                       </select>
                       <div class="invalid-feedback">
-                          Por favor, selecione um horário.
+                          Por favor, selecione um horário correto.
                       </div>
                       <select id="modal_hora_final" name="modal_hora_final" class="form-control form-control-sm formmodal" required>
                           <option value="">:: Selecione ::</option>
@@ -132,7 +132,7 @@
                           @endforeach
                       </select>
                       <div class="invalid-feedback">
-                          Por favor, selecione um horário.
+                          Por favor, selecione um horário correto.
                       </div>
                     </div>
                   </div>
