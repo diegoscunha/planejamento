@@ -12,14 +12,17 @@
         <a class="nav-link nav-dropdown-toggle" href="#"><i class="fa fa-database"></i> Cadastro</a>
         <ul class="nav-dropdown-items">
           <li class="nav-item">
-            <a class="nav-link" href="/sample/buttons"><i class="fa fa-group"></i> Usuários</a>
+            <a class="nav-link" href="{{ route('listar-disciplinas') }}"><i class="fa fa-book"></i> Disciplinas</a>
           </li>
+          {{--<li class="nav-item">
+            <a class="nav-link" href="{{ route('listar-salas') }}"><i class="fa fa-book"></i> Salas</a>
+          </li>--}}
           <li class="nav-item">
-            <a class="nav-link" href="/sample/social"><i class="fa fa-institution"></i> Unidades</a>
+            <a class="nav-link" href="{{ route('listar-unidades') }}"><i class="fa fa-institution"></i> Unidades</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/sample/cards"><i class="fa fa-book"></i> Disciplinas</a>
-          </li>
+          {{--<li class="nav-item">
+              <a class="nav-link" href="{{ route('listar-usuarios') }}"><i class="fa fa-group"></i> Usuários</a>
+            </li>--}}
         </ul>
       </li>
       <li class="nav-title">

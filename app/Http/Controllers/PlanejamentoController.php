@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Routing\Controller as BaseController;
 
-class PlanejamentoController extends BaseController
+class PlanejamentoController extends Controller
 {
 
     public function index()

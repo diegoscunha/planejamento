@@ -148,7 +148,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6" style='width:1000px; height:800px; padding:0px;'>
+        <div class="col-md-12" style='width:1000px; height:800px; padding:0px;'>
             <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
                 <div class="dhx_cal_navline">
                     <div class="dhx_cal_prev_button">&nbsp;</div>
@@ -163,11 +163,11 @@
                 <div class="dhx_cal_data"></div>
             </div>
         </div>
-        <div class="col-md-6">
+        <!--<div class="col-md-6">-->
           <!-- Visualizar -->
-          <br>
+          <!--<br>-->
           <!--<iframe name="interno" style="height: 100%;width: 100%;" marginwidth="0" marginheight="0" frameborder="0" scrollbar="no" scrolling="no" src="{{ route('index') }}"></iframe>-->
-        </div>
+        <!--</div>-->
     </div>
 </div>
 @endsection

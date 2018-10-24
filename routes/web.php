@@ -36,3 +36,17 @@ Auth::routes();
 // Registration Routes...
 $this->get('/adm/usuario/register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 $this->post('/adm/usuario/register', 'Auth\RegisterController@register');
+
+// unidades
+Route::get('/adm/unidade', 'UnidadeController@list')->name('listar-unidades')->middleware('auth');
+Route::get('/adm/unidade/nova', 'UnidadeController@novo')->name('adicionar-unidade')->middleware('auth');
+Route::get('/adm/unidade/editar/{id}', 'UnidadeController@editar')->where('id', '[0-9]+')->name('editar-unidade')->middleware('auth');
+Route::post('/adm/unidade/save', 'UnidadeController@save')->name('salvar-unidade')->middleware('auth');
+Route::get('/adm/unidade/delete/{id}', 'UnidadeController@delete')->where('id', '[0-9]+')->name('excluir-unidade')->middleware('auth');
+
+// disciplinas
+Route::get('/adm/disciplina', 'DisciplinaController@list')->name('listar-disciplinas')->middleware('auth');
+Route::get('/adm/disciplina/nova', 'DisciplinaController@novo')->name('adicionar-disciplina')->middleware('auth');
+Route::get('/adm/disciplina/editar/{id}', 'DisciplinaController@editar')->where('id', '[0-9]+')->name('editar-disciplina')->middleware('auth');
+Route::post('/adm/disciplina/save', 'DisciplinaController@save')->name('salvar-disciplina')->middleware('auth');
+Route::get('/adm/disciplina/delete/{id}', 'DisciplinaController@delete')->where('id', '[0-9]+')->name('excluir-disciplina')->middleware('auth');
