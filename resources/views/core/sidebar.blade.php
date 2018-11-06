@@ -14,15 +14,15 @@
           <li class="nav-item">
             <a class="nav-link" href="{{ route('listar-disciplinas') }}"><i class="fa fa-book"></i> Disciplinas</a>
           </li>
-          {{--<li class="nav-item">
+          <li class="nav-item">
             <a class="nav-link" href="{{ route('listar-salas') }}"><i class="fa fa-book"></i> Salas</a>
-          </li>--}}
+          </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ route('listar-unidades') }}"><i class="fa fa-institution"></i> Unidades</a>
           </li>
-          {{--<li class="nav-item">
-              <a class="nav-link" href="{{ route('listar-usuarios') }}"><i class="fa fa-group"></i> Usuários</a>
-            </li>--}}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('listar-usuarios') }}"><i class="fa fa-group"></i> Usuários</a>
+          </li>
         </ul>
       </li>
       <li class="nav-title">

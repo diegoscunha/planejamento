@@ -6,8 +6,8 @@
     <div class="card-body">
       <div class="row">
         <div class="col-sm-5">
-          <h1 class="card-title mb-0">Nova Usuário</h1>
-          <div class="small text-muted">Novo registro de usuário</div>
+          <h1 class="card-title mb-0">Editar Usuário</h1>
+          <div class="small text-muted">Editar registro de usuário</div>
         </div>
       </div>
       @if ($errors->any())
@@ -27,27 +27,17 @@
       <br>
       <div class="row">
         <div class="col-md-6">
-          <form class="" method="POST" action="{{ route('register') }}">
+          <form class="" method="POST" action="{{ route('salvar-usuario') }}">
               {{ csrf_field() }}
+              <input type="hidden" id="id" name="id" value="{{ old('id', $usuario->id) }}" />
               <div class="form-group">
                 <label for="name">Nome</label>
-                <input id="name" type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required autofocus />
+                <input id="name" type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name', $usuario->name) }}" required autofocus />
               </div>
               <div class="form-group">
                 <label for="email">E-mail</label>
-                <input id="email" type="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required />
+                <input id="email" type="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email', $usuario->email) }}" required />
               </div>
-
-              <div class="form-group">
-                <label for="password">Senha</label>
-                <input id="password" type="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required />
-              </div>
-
-              <div class="form-group">
-                <label for="password-confirm">Confirmar Senha</label>
-                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required />
-              </div>
-
               <button type="submit" class="btn btn-primary">
                     Salvar
               </button>

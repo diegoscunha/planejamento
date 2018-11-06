@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -41,6 +42,20 @@ class RegisterController extends Controller
     }
 
     /**
+     * Register new user.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showRegistrationForm()
+    {
+        $breadcrumb = [
+              'Home' => route('adm'),
+              'Usuários' => route('listar-usuarios'),
+              'Adicionar Usuário' => ''
+        ];
+        return view('auth.register', ['breadcrumb' => $breadcrumb]);
+    }
+    /**
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data
@@ -68,5 +83,20 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        $this->create($request->all());
+
+        return redirect()->route('listar-usuarios')->with('message', 'Usuário criado com sucesso!');
     }
 }

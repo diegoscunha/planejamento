@@ -6,8 +6,8 @@
     <div class="card-body">
       <div class="row">
         <div class="col-sm-5">
-          <h1 class="card-title mb-0">Nova Usuário</h1>
-          <div class="small text-muted">Novo registro de usuário</div>
+          <h1 class="card-title mb-0">Alterar Senha</h1>
+          <div class="small text-muted">Alterar senha do usuário</div>
         </div>
       </div>
       @if ($errors->any())
@@ -27,17 +27,8 @@
       <br>
       <div class="row">
         <div class="col-md-6">
-          <form class="" method="POST" action="{{ route('register') }}">
+          <form class="" method="POST" action="{{ route('alterar-senha') }}">
               {{ csrf_field() }}
-              <div class="form-group">
-                <label for="name">Nome</label>
-                <input id="name" type="text" class="form-control {{ $errors->has('name') ? ' is-invalid' : '' }}" name="name" value="{{ old('name') }}" required autofocus />
-              </div>
-              <div class="form-group">
-                <label for="email">E-mail</label>
-                <input id="email" type="email" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required />
-              </div>
-
               <div class="form-group">
                 <label for="password">Senha</label>
                 <input id="password" type="password" class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required />

@@ -32,11 +32,6 @@ Route::post('/api/planejamento', 'PlanejamentoController@update');
 Route::get('/api/planejamento/{periodo_letivo}/nao-alocadas/{unidade}', 'PlanejamentoController@getNaoAlocadas')->where('periodo_letivo', '[0-9]+')->middleware('auth');
 Route::post('/api/planejamento/{periodo_letivo}/{unidade}/alocar', 'PlanejamentoController@alocar')->where('periodo_letivo', '[0-9]+')->middleware('auth');
 
-Auth::routes();
-// Registration Routes...
-$this->get('/adm/usuario/register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-$this->post('/adm/usuario/register', 'Auth\RegisterController@register');
-
 // unidades
 Route::get('/adm/unidade', 'UnidadeController@list')->name('listar-unidades')->middleware('auth');
 Route::get('/adm/unidade/nova', 'UnidadeController@novo')->name('adicionar-unidade')->middleware('auth');
@@ -50,3 +45,25 @@ Route::get('/adm/disciplina/nova', 'DisciplinaController@novo')->name('adicionar
 Route::get('/adm/disciplina/editar/{id}', 'DisciplinaController@editar')->where('id', '[0-9]+')->name('editar-disciplina')->middleware('auth');
 Route::post('/adm/disciplina/save', 'DisciplinaController@save')->name('salvar-disciplina')->middleware('auth');
 Route::get('/adm/disciplina/delete/{id}', 'DisciplinaController@delete')->where('id', '[0-9]+')->name('excluir-disciplina')->middleware('auth');
+
+// salas
+Route::get('/adm/sala', 'SalaController@list')->name('listar-salas')->middleware('auth');
+Route::get('/adm/sala/nova', 'SalaController@novo')->name('adicionar-sala')->middleware('auth');
+Route::get('/adm/sala/editar/{id}', 'SalaController@editar')->where('id', '[0-9]+')->name('editar-sala')->middleware('auth');
+Route::post('/adm/sala/save', 'SalaController@save')->name('salvar-sala')->middleware('auth');
+Route::get('/adm/sala/delete/{id}', 'SalaController@delete')->where('id', '[0-9]+')->name('excluir-sala')->middleware('auth');
+
+// usuarios
+Route::get('/adm/usuario', 'UserController@list')->name('listar-usuarios')->middleware('auth');
+Route::get('/adm/usuario/ativar/{id}', 'UserController@ativar_desativar')->where('id', '[0-9]+')->name('ativar-usuario')->middleware('auth');
+Route::get('/adm/usuario/desativar/{id}', 'UserController@ativar_desativar')->where('id', '[0-9]+')->name('desativar-usuario')->middleware('auth');
+Route::get('/adm/usuario/editar/{id}', 'UserController@editar')->where('id', '[0-9]+')->name('editar-usuario')->middleware('auth');
+Route::post('/adm/usuario/save', 'UserController@save')->name('salvar-usuario')->middleware('auth');
+
+Route::get('/adm/usuario/alterar-senha', 'UserController@show_alterar_senha')->name('alterar-senha')->middleware('auth');
+Route::post('/adm/usuario/alterar-senha', 'UserController@update_password')->name('alterar-senha')->middleware('auth');
+
+Auth::routes();
+// Registration Routes...
+$this->get('/adm/usuario/register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+$this->post('/adm/usuario/register', 'Auth\RegisterController@register');

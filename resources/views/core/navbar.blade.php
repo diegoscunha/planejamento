@@ -2,7 +2,7 @@
   <button class="navbar-toggler mobile-sidebar-toggler d-lg-none mr-auto" type="button">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <a class="navbar-brand" href="#"></a>
+  <a class="navbar-brand" href="{{ route('adm') }}"></a>
   <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -20,7 +20,8 @@
         <div class="dropdown-header text-center">
           <strong>{{ auth()->user()->name }}</strong>
         </div>
-        <a class="dropdown-item" href="#"><i class="fa fa-key"></i> Alterar senha</a>
+        <a class="dropdown-item" href="{{ route('editar-usuario', ['id' => Auth::id()]) }}"><i class="fa fa-user"></i> Alterar dados</a>
+        <a class="dropdown-item" href="{{ route('alterar-senha') }}"><i class="fa fa-key"></i> Alterar senha</a>
         <div class="dropdown-header text-center">
           <strong>Settings</strong>
         </div>

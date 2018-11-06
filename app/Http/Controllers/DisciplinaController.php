@@ -7,6 +7,11 @@ use App\Models\Disciplina;
 
 class DisciplinaController extends Controller
 {
+    /**
+     * Show disciplina list.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function list()
     {
         $result = Disciplina::orderBy('codigo')->get();
@@ -16,7 +21,11 @@ class DisciplinaController extends Controller
         ];
         return view('adm.disciplina.list-disciplinas', ['breadcrumb' => $breadcrumb, 'disciplinas' => $result]);
     }
-
+    /**
+     * Register new disciplina.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function novo()
     {
         $breadcrumb = [
@@ -26,7 +35,12 @@ class DisciplinaController extends Controller
         ];
         return view('adm.disciplina.edit-disciplina', ['breadcrumb' => $breadcrumb, 'disciplina' => new Disciplina()]);
     }
-
+    /**
+     * Save disciplina record.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function save(Request $request)
     {
         $request->validate([
@@ -50,7 +64,12 @@ class DisciplinaController extends Controller
 
         return redirect()->route('listar-disciplinas')->with('success', 'Disciplina salva com sucesso!');
     }
-
+    /**
+     * Edit disciplina.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
     public function editar($id)
     {
         $disciplina = Disciplina::findOrfail($id);
@@ -61,7 +80,13 @@ class DisciplinaController extends Controller
         ];
         return view('adm.disciplina.edit-disciplina', ['breadcrumb' => $breadcrumb, 'disciplina' => $disciplina]);
     }
-
+    /**
+     * Delete disciplina record.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
     public function delete(Request $req, $id)
     {
         if(!empty($id)) {
