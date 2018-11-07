@@ -1,4 +1,8 @@
 $(document).ready(function() {
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+
     $('a.excluir-planejamento').click(function(evt) {
         evt.preventDefault();
         href_excluir = $(this).attr('href');

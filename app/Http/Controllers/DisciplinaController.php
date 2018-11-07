@@ -62,7 +62,7 @@ class DisciplinaController extends Controller
             return back()->withErrors('Código de disciplina já cadastrado no banco de dados!')->withInput($request->all());
         }
 
-        return redirect()->route('listar-disciplinas')->with('success', 'Disciplina salva com sucesso!');
+        return redirect()->route('listar-disciplinas')->with('message', 'Disciplina salva com sucesso!');
     }
     /**
      * Edit disciplina.
