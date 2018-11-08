@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -45,5 +46,21 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         return view('pages.login');
+    }
+
+    /**
+     * Attempt to log the user into the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return bool
+     */
+    protected function attemptLogin(Request $request)
+    {
+        $credentials = $this->credentials($request);
+        $credentials['ativo'] = true;
+
+        return $this->guard()->attempt(
+            $credentials, $request->filled('remember')
+        );
     }
 }
