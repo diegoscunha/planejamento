@@ -50,6 +50,27 @@ function refresh_grid(events) {
         $('#exampleModalCenter').modal('show');
     });
 }
+
+function montar_grid(semestre, params) {
+    var disciplinas = ajax('GET', '/planejamento/consultar-disciplinas-grid/json', {semestre: semestre, disciplinas: params});
+
+    $('#tb-disciplinas > tbody').html('');
+
+    $.each(disciplinas, function(i, value) {
+        linha = "<tr>";
+        linha += "<th scope='row'>" + value.periodo_letivo + "</th>";
+        linha += "<td>" + value.codigo_disciplina + "</td>";
+        linha += "<td>" + value.disciplina + "</td>";
+        linha += "<td>" + value.unidade + "</td>";
+        linha += "<td>" + value.numero_sala + "</td>";
+        linha += "<td>" + value.turma + "</td>";
+        linha += "<td>" + value.dia + "</td>";
+        linha += "<td>" + value.horario + "</td>";
+        linha += "<td>" + value.docente + "</td>";
+        $('#tb-disciplinas > tbody').append(linha);
+    });
+}
+
 // Exportação
 var header = "<p><h1>Sistema de Planejamento Acadêmico</h1></p><h3>Universidade Federal da Bahia</h3><h3>{UNIDADE}</h3><h3>{SALA}</h3>",
     footer = "Sistema de Planejamento Acadêmico UFBA";

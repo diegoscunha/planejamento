@@ -26,11 +26,13 @@ Route::get('/adm/planejamento/detalhes/{periodo_letivo}', 'PlanejamentoControlle
 Route::get('/planejamento/obter-unidades/json', 'PlanejamentoController@obter_unidades');
 Route::get('/planejamento/obter-salas/json', 'PlanejamentoController@obter_salas');
 Route::get('/planejamento/consultar-disciplinas/json', 'PlanejamentoController@obter_disciplinas');
+Route::get('/planejamento/consultar-disciplinas-grid/json', 'PlanejamentoController@obter_disciplinas_grid');
 
 Route::get('/api/planejamento/isexist/{ano}/{semestre}', 'PlanejamentoController@isExist')->where('ano', '[0-9]+')->where('semestre', '[1-2]')->middleware('auth');
-Route::post('/api/planejamento', 'PlanejamentoController@update');
+Route::post('/api/planejamento', 'PlanejamentoController@update')->middleware('auth');
 Route::get('/api/planejamento/{periodo_letivo}/nao-alocadas/{unidade}', 'PlanejamentoController@getNaoAlocadas')->where('periodo_letivo', '[0-9]+')->middleware('auth');
 Route::post('/api/planejamento/{periodo_letivo}/{unidade}/alocar', 'PlanejamentoController@alocar')->where('periodo_letivo', '[0-9]+')->middleware('auth');
+Route::get('/api/disciplinas/{semestre}', 'DisciplinaController@obter_disciplinas')->where('semestre', '[0-9]+');
 
 // unidades
 Route::get('/adm/unidade', 'UnidadeController@list')->name('listar-unidades')->middleware('auth');

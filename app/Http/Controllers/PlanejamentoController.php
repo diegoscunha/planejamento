@@ -309,4 +309,28 @@ class PlanejamentoController extends Controller
                     ->get();
         return count($result)>0 ? true : false;
     }
+
+    public function obter_disciplinas_grid(Request $request)
+    {
+        $semestre = $request->query('semestre');
+        $disciplinas = explode(',', $request->query('disciplinas'));
+
+        $result = DB::table('calendars as c')
+                    ->select('c.periodo_letivo', 'c.codigo_disciplina', 'd.nome as disciplina', 'u.nome as unidade', 'numero_sala', 'turma', 'dia_semana_ext as dia', 'hora_inicial', 'hora_final', DB::raw('trim(docente) as docente'))
+                    ->join('unidades as u', 'u.codigo', '=', 'c.unidade')
+                    ->leftJoin('disciplinas as d', 'd.codigo', '=', 'c.codigo_disciplina')
+                    ->where('c.periodo_letivo', $semestre)
+                    ->whereIn('c.codigo_disciplina', $disciplinas)
+                    ->orderBy('c.codigo_disciplina')
+                    ->orderBy('c.turma')
+                    ->orderBy('c.dia_semana')
+                    ->orderBy('c.hora_inicial')
+                    ->get();
+       foreach ($result as $value) {
+          $value->periodo_letivo = format_periodo_letivo($value->periodo_letivo);
+          $value->horario = format_hora($value->hora_inicial) . ' - ' . format_hora($value->hora_final);
+       }
+
+       return response()->json($result, Response::HTTP_OK);
+    }
 }

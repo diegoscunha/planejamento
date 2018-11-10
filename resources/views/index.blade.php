@@ -16,8 +16,12 @@
 
 	<link href="{{ asset('css/jquery.loading.min.css') }}" rel="stylesheet">
 
+	<link href="{{ asset('css/normalize.css') }}" rel="stylesheet">
+	<!-- <link href="{{ asset('css/style_.css') }}" rel="stylesheet"> -->
+	<link href="{{ asset('css/jquery.magicsearch.min.css') }}" rel="stylesheet">
+
 	<!-- Scripts -->
-	<script src="{{ asset('js/app_old.js') }}" defer></script>
+	<!--<script src="{{ asset('js/app_old.js') }}" defer></script> -->
 
 	<!-- Fonts -->
 	<link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -86,34 +90,65 @@
 	    					</div>
 							</div>
 						</div>
-		        <div class="form-group row">
-	            <label for="unidade" class="col-sm-1 col-form-label">Unidade</label>
-	            <div class="col-sm-4">
-                <select id="unidade" name="unidade" class="form-control form-control-sm filtro" required>
-                    <option value="">:: Selecione ::</option>
-                </select>
-								<div class="invalid-feedback">
-        						Por favor, selecione uma unidade.
-      					</div>
-	            </div>
-		        </div>
-		        <div class="form-group row">
-	            <label for="sala" class="col-sm-1 col-form-label">Sala</label>
-	            <div class="col-sm-4">
-                <select id="sala" name="sala" class="form-control form-control-sm filtro" required>
-                    <option value="">:: Selecione ::</option>
-                </select>
-								<div class="invalid-feedback">
-										Por favor, selecione uma sala.
+						<div class="form-group row">
+							<div class="col-md-10 offset-md-1">
+								<div class="custom-control custom-radio custom-control-inline">
+								  <input type="radio" id="op_disciplina" name="op_filtro" class="custom-control-input filtro" value="D" required>
+								  <label class="custom-control-label" for="op_disciplina">Pesquisar por disciplina</label>
 								</div>
-	            </div>
-		        </div>
+								<div class="custom-control custom-radio custom-control-inline">
+								  <input type="radio" id="op_sala" name="op_filtro" class="custom-control-input filtro" value="S" required>
+								  <label class="custom-control-label" for="op_sala">Pesquisar por sala</label>
+								</div>
+								<div id="rdb-feadback" class="invalid-feedback">
+										Por favor, selecione pelo menos uma opção.
+								</div>
+							</div>
+						</div>
+
+						<div id="filtro_sala" style="display: none;">
+			        <div class="form-group row">
+		            <label for="unidade" class="col-sm-1 col-form-label">Unidade</label>
+		            <div class="col-sm-4">
+	                <select id="unidade" name="unidade" class="form-control form-control-sm filtro-sala" required>
+	                    <option value="">:: Selecione ::</option>
+	                </select>
+									<div class="invalid-feedback">
+	        						Por favor, selecione uma unidade.
+	      					</div>
+		            </div>
+			        </div>
+			        <div class="form-group row">
+		            <label for="sala" class="col-sm-1 col-form-label">Sala</label>
+		            <div class="col-sm-4">
+	                <select id="sala" name="sala" class="form-control form-control-sm filtro-sala" required>
+	                    <option value="">:: Selecione ::</option>
+	                </select>
+									<div class="invalid-feedback">
+											Por favor, selecione uma sala.
+									</div>
+		            </div>
+			        </div>
+						</div>
+
+						<div id="filtro_disciplina" style="visibility: hidden;">
+							<div class="form-group row">
+								<label for="unidade" class="col-sm-1 col-form-label">Disciplinas</label>
+								<div class="col-sm-4">
+										<input class="magicsearch form-control form-control-sm filtro-disciplina" id="basic" placeholder="buscar disciplinas..." data-id="" required>
+										<div id="ftr-disciplina" class="invalid-feedback">
+												Por favor, selecione pelo menos uma disciplina.
+										</div>
+								</div>
+							</div>
+						</div>
+
 		        <div class="form-group">
 		          <button id="pesquisar" class="btn btn-primary">Pesquisar</button>
 		        </div>
     			</form>
 
-    			<div class='controls'>
+    			<div id="btn-exports" class='controls'>
         		<button type="button" class="btn btn-sm btn-danger" onclick='exports("pdf")'>
 							<i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF
 						</button>
@@ -124,7 +159,7 @@
 							<i class="fa fa-file-excel-o" aria-hidden="true"></i> Excel
 						</button>
     			</div>
-			    <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
+			    <div id="scheduler_here" class="dhx_cal_container" style="width:100%; height:100%;">
 			        <div class="dhx_cal_navline">
 			    			<div class="dhx_cal_prev_button">&nbsp;</div>
 			    			<div class="dhx_cal_next_button">&nbsp;</div>
@@ -137,6 +172,25 @@
 			    		<div class="dhx_cal_header"></div>
 			    		<div class="dhx_cal_data"></div>
 			    </div>
+					<div id="table-disc" style="width:100%; /*height:100%;*/ background-color: white; font-size: 12px; font-family: Arial, Helvetica, sans-serif; display: none;">
+						<table id="tb-disciplinas" class="table table-bordered table-striped table-sm">
+						  <thead>
+						    <tr>
+									<th scope="col">Semestre</th>
+						      <th scope="col">Código Disciplina</th>
+						      <th scope="col">Nome Disciplina</th>
+						      <th scope="col">Unidade</th>
+						      <th scope="col">Sala</th>
+									<th scope="col">Turma</th>
+									<th scope="col">Dia</th>
+									<th scope="col">Horario</th>
+									<th scope="col">Docente</th>
+						    </tr>
+						  </thead>
+						  <tbody>
+						  </tbody>
+						</table>
+					</div>
 				</div>
 			</main>
 		</div>
@@ -151,11 +205,60 @@
 		<script src="{{ asset('js/jquery.loading.js') }}" type="text/javascript" ></script>
 		<script src="{{ asset('js/script.js') }}" type="text/javascript" charset="utf-8"></script>
 		<script src="{{ asset('js/functions.js') }}" type="text/javascript" charset="utf-8"></script>
+
+		<!-- <script src="{{ asset('js/jquery-2.2.3.min.js') }}" type="text/javascript" charset="utf-8"></script> -->
+		<script src="{{ asset('js/jquery.magicsearch.js') }}" type="text/javascript" charset="utf-8"></script>
+
 		<script type="text/javascript">
 			// Exportação
 			function exports(type) {
 					exportScheduler(type, $('#unidade option:selected').text(), $('#sala option:selected').text());
 			}
+
+			$('#op_disciplina, #op_sala').change(function (evt) {
+					if($(this).attr('id')=='op_disciplina') {
+							$('#filtro_sala').hide();
+							$('#filtro_disciplina').show();
+					} else if ($(this).attr('id')=='op_sala') {
+							$('#filtro_disciplina').hide();
+							$('#filtro_sala').show();
+					}
+
+			});
+
+			$(function() {
+            var dataSource = [{"codigo":"ARQ003","descricao":"DESCRITIVA I"},{"codigo":"ARQ004","descricao":"DESCRITIVA II"},{"codigo":"ARQ005","descricao":"DESENHO GEOMETRICO I"},{"codigo":"ARQ006","descricao":"DESENHO GEOMETRICO II"},{"codigo":"ARQ009","descricao":"INTRODUCAO A ARQUITETURA"}];
+            $('#basic').magicsearch({
+                //dataSource: dataSource,
+								dataSource: 'http://localhost:8000/api/disciplinas/20182',
+								type: 'ajax',
+								// ajax options
+								ajaxOptions: {
+									headers: {
+										'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+									}
+								},
+                fields: ['codigo', 'descricao'],
+                id: 'codigo',
+                format: '%codigo% - %descricao%',
+								// show selected options
+								showSelected: false,
+                multiple: true,
+                multiField: 'codigo',
+                multiStyle: {
+                    space: 5,
+                    width: 80
+                },
+								// show dropdown button
+  							dropdownBtn: true,
+								// max number of results
+								maxShow: 5,
+								// text when no results
+								noResult: 'Disciplina não encontrada!',
+            });
+						$('#filtro_disciplina').css('visibility', 'visible');
+						$('#filtro_disciplina').hide();
+        });
 		</script>
 	</body>
 </html>

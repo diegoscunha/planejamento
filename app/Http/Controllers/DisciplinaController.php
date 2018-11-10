@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use DB;
 use App\Models\Disciplina;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class DisciplinaController extends Controller
 {
@@ -96,5 +99,30 @@ class DisciplinaController extends Controller
 
         $req->session()->flash('message', 'Disciplina excluída com sucesso!');
         return redirect()->route('listar-disciplinas');
+    }
+    /**
+     * Get disciplinas.
+     *
+     * @param int $semestre
+     * @return \Illuminate\Http\Response
+     */
+    public function obter_disciplinas($semestre)
+    {
+        /* Cria um cahce de 10 min pora essa consulta */
+        $minutes = now()->addMinutes(60);
+        Cache::forget('disciplinas'.$semestre);
+        $result = Cache::remember('disciplinas'.$semestre, $minutes, function () use ($semestre) {
+            return DB::table('calendars as c')
+                      ->distinct('c.codigo_disciplina')
+                      //->select('c.codigo_disciplina as codigo', DB::raw('ifnull(d.nome, " ") as descricao'))
+                      ->select('c.codigo_disciplina as codigo', DB::raw('case when d.nome is null then " " when d.nome = "" then " " else d.nome end as descricao'))
+                      ->join('unidades as u', 'u.codigo', '=', 'c.unidade')
+                      ->leftJoin('disciplinas as d', 'd.codigo', '=', 'c.codigo_disciplina')
+                      ->where('periodo_letivo', $semestre)
+                      ->orderBy('codigo_disciplina')
+                      ->get();
+        });
+
+        return response()->json($result, Response::HTTP_OK);
     }
 }

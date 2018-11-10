@@ -1,14 +1,43 @@
 $(document).ready(function() {
     $('#pesquisar').click(function(evt) {
         evt.preventDefault();
-        var inputs = $('.filtro'),
+        var inputsFiltro = $('.filtro'),
+            inputsFiltroSala = $('.filtro-sala'),
+            inputsFiltroDisciplina = $('.filtro-disciplina'),
             isValid = true;
 
-        $(".filtro").removeClass("is-invalid");
-        for(var i=0; i<inputs.length; i++){
-            if (!inputs[i].validity.valid){
+        $(".filtro, .filtro-sala, .filtro-disciplina").removeClass("is-invalid");
+        $('#rdb-feadback').css('display', 'none');
+        $('#ftr-disciplina').css('display', 'none');
+        for(var i=0; i<inputsFiltro.length; i++){
+            if (!inputsFiltro[i].validity.valid){
                 isValid = false;
-                $(inputs[i]).addClass("is-invalid");
+                $(inputsFiltro[i]).addClass("is-invalid");
+                if($(inputsFiltro[i]).attr('type')=='radio')
+                    $('#rdb-feadback').css('display', 'block');
+            }
+        }
+
+        if(!isValid)
+            return;
+
+        var tipoFiltro = $('input[type=radio][name=op_filtro]:checked').val();
+
+        if(tipoFiltro=='D') {
+            for(var i=0; i<inputsFiltroDisciplina.length; i++){
+                if ($(inputsFiltroDisciplina[i]).attr('data-id')==''){
+                    isValid = false;
+                    $(inputsFiltroDisciplina[i]).addClass("is-invalid");
+                    $('#ftr-disciplina').css('display', 'block');
+                }
+            }
+        } else if(tipoFiltro=='S') {
+            $('#basic').trigger('clear');
+            for(var i=0; i<inputsFiltroSala.length; i++){
+                if (!inputsFiltroSala[i].validity.valid){
+                    isValid = false;
+                    $(inputsFiltroSala[i]).addClass("is-invalid");
+                }
             }
         }
 
@@ -16,8 +45,18 @@ $(document).ready(function() {
             $('body').loading({
                 message: 'Carregando...'
             });
-            var events = buscar_disciplinas();
-            refresh_calendar(events);
+            if(tipoFiltro=='S') {
+                $('#table-disc').hide();
+                var events = buscar_disciplinas();
+                refresh_calendar(events);
+                $('#btn-exports').show();
+                $('#scheduler_here').show();
+            } else if(tipoFiltro=='D') {
+                $('#btn-exports').hide();
+                $('#scheduler_here').hide();
+                montar_grid($('#semestre').val().replace('.', ''), $('#basic').attr('data-id'));
+                $('#table-disc').show();
+            }
             $('body').loading('stop');
         }
     });
