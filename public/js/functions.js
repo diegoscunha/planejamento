@@ -33,9 +33,8 @@ function buscar_disciplinas() {
 function buscar_disciplinas_nao_alocadas() {
     semestre = $('#semestre').val().replace('.', '');
     unidade = $('#unidade').val();
-    sala = $('#sala').val();
 
-    return ajax('GET', '/planejamento/consultar-disciplinas/json', {semestre:semestre,unidade:unidade,sala:sala});
+    return ajax('GET', '/api/planejamento/' + semestre + '/nao-alocadas/' + unidade);
 }
 
 function refresh_calendar(events) {
@@ -221,8 +220,33 @@ function init_ajustar(events) {
     // remover icones de edição do evento ['icon_custom', 'icon_save', 'icon_cancel']
     //scheduler.config.icons_edit = [];
     // remover icones de seleção ao lado do evento ['icon_details', 'icon_edit', 'icon_delete']
-    //scheduler.config.icons_select = [];
-    scheduler.attachEvent("onClick",function(){return false;})
+    scheduler.config.icons_select = ['icon_delete'];
+    scheduler.locale.labels.icon_delete = "Desalocar";
+    scheduler._click.buttons.delete = function(id) {
+        swal({
+          title: "Você tem certeza?",
+          text: "A disciplina será removida da sala atual!",
+          icon: "warning",
+          buttons: true,
+          dangerMode: true,
+        }).then((resposta) => {
+          if (resposta) {
+              $('body').loading({
+                  message: 'Carregando...'
+              });
+              ajax('GET', '/api/planejamento/desalocar/'+id);
+              var nao_alocadas = buscar_disciplinas_nao_alocadas();
+              refresh_grid(nao_alocadas);
+              var events = buscar_disciplinas();
+              refresh_calendar(events);
+              swal("Disciplina desalocada com sucesso!", {
+                icon: "success",
+              });
+              $('body').loading('stop');
+            }
+        });
+    };
+    //scheduler.attachEvent("onClick",function(){return false;})
 
     //scheduler.config.hour_date="%h:%i %A";
     //scheduler.xy.scale_width = 70;
@@ -248,7 +272,7 @@ function init_ajustar(events) {
             }
     }, true);
 
-    dp.attachEvent("onAfterUpdate", function(id, action, tid, response){
+    dp.attachEvent("onAfterUpdate", function(id, action, tid, response) {
       swal({
         title: "Você tem certeza?",
         text: "O registo será salvo com os dados informados!",
@@ -294,7 +318,6 @@ function init_grid_ajuste() {
     mygrid.attachEvent("onRowSelect", function(id,ind){
         limpar_modal();
         var disc = mygrid.getRowData(mygrid.getSelectedRowId());
-        console.log(disc);
         $('#modal_id').val(disc.id);
         $('#modal_title').html(disc.horario + ' ' + disc.codigo_disciplina);
         $('#modal_periodo_letivo').html(disc.periodo_letivo);
@@ -313,6 +336,7 @@ function limpar_modal() {
     $('#modal_title').html('');
     $('#modal_periodo_letivo').html('');
     $('#modal_unidade').val('');
+    $('#modal_sala').val('');
     $('#modal_docente').html('');
     $('#modal_dia_semana').val('');
     $('#modal_hora_inicial').val('');

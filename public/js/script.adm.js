@@ -1,4 +1,27 @@
 $(document).ready(function() {
+
+    $('#liberado').click(function(evt) {
+        var semestre = $('#semestre').val().replace('.', ''),
+            url = '/api/planejamento/' + semestre + '/liberar';
+        ajax('GET', url);
+    });
+
+    $('#modal_sala, #modal_dia_semana, #modal_hora_inicial').change(function() {
+        var semestre = $('#semestre').val().replace('.', ''),
+            url = '/api/planejamento/choque-horario/' + $('#modal_id').val();
+
+        if($('#modal_sala').val()!='' && $('#modal_dia_semana').val()!='' && $('#modal_hora_inicial').val()!='') {
+          var result = ajax('GET', url, {periodo_letivo: semestre, unidade: $('#modal_unidade').val(), sala: $('#modal_sala').val() , dia_semana: $('#modal_dia_semana').val(), hora_inicial: $('#modal_hora_inicial').val() });
+
+          if(result.choque_horario) {
+              $('#alert_choque').css('display', 'block');
+              $('#alert_choque').html('<span class="fa fa-exclamation-triangle"></span> Choque de hórario. Há outra(s) disciplinas neste hórario!');
+          } else {
+              $('#alert_choque').css('display', 'none');
+          }
+        }
+    });
+
     $(function () {
       $('[data-toggle="tooltip"]').tooltip();
     });

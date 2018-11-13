@@ -11,9 +11,18 @@
   <div class="card">
     <div class="card-body">
       <div class="row">
-        <div class="col-sm-12">
+        <div class="col-6">
           <h1 class="card-title mb-0">Ajustar Planejamento {{ $semestre }}</h1>
           <div class="small text-muted">Realize ajustes nas alocações das turmas</div>
+        </div>
+        <div class="col">
+          <label for="liberado">Liberado para consulta?</label>
+          <br>
+          <label class="switch switch-text switch-success">
+            <input type="checkbox" class="switch-input" id="liberado" name="liberado" {{ $liberado ? 'checked' : '' }}>
+            <span class="switch-label" data-on="Sim" data-off="Não"></span>
+            <span class="switch-handle"></span>
+          </label>
         </div>
       </div>
       <br>
@@ -53,7 +62,7 @@
         </div>
         <div class="col-md-6">
           <h5>Disciplinas Não Alocadas</h5>
-          <div id="gridbox" style="width:height:150px;"></div>
+          <div id="gridbox" style="height:150px;"></div>
           <!-- Modal -->
           <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -136,6 +145,12 @@
                       </div>
                     </div>
                   </div>
+                  <div class="row">
+                    <div class="col">
+                      <div id="alert_choque" style="display: none;" class="alert alert-danger" role="alert">
+                      </div>
+                    </div>
+                  </div>
                   </form>
                 </div>
                 <div class="modal-footer">
@@ -163,11 +178,6 @@
                 <div class="dhx_cal_data"></div>
             </div>
         </div>
-        <!--<div class="col-md-6">-->
-          <!-- Visualizar -->
-          <!--<br>-->
-          <!--<iframe name="interno" style="height: 100%;width: 100%;" marginwidth="0" marginheight="0" frameborder="0" scrollbar="no" scrolling="no" src="{{ route('index') }}"></iframe>-->
-        <!--</div>-->
     </div>
 </div>
 @endsection

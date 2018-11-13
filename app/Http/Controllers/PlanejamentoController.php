@@ -10,7 +10,11 @@ use Illuminate\Routing\Controller as BaseController;
 
 class PlanejamentoController extends Controller
 {
-
+    /**
+     * Exibe tela inicial do sistema
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
         $semestres = DB::table('semestres')
@@ -20,7 +24,12 @@ class PlanejamentoController extends Controller
                         ->get();
         return view('index', ['semestres' => $semestres]);
     }
-
+    /**
+     * Retorna unidades do semestre
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return string
+     */
     public function obter_unidades(Request $request)
     {
         $periodo_letivo = $request->query('semestre');
@@ -35,7 +44,12 @@ class PlanejamentoController extends Controller
 
         return response()->json($unidades, Response::HTTP_OK);
     }
-
+    /**
+     * Retorna salas do semestre e da unidade
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return string
+     */
     public function obter_salas(Request $request)
     {
         $periodo_letivo = $request->query('semestre');
@@ -50,7 +64,12 @@ class PlanejamentoController extends Controller
 
         return response()->json($salas, Response::HTTP_OK);
     }
-
+    /**
+     * Retorna disciplinas
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return string
+     */
     public function obter_disciplinas(Request $request)
     {
         $periodo_letivo = $request->query('semestre');
@@ -64,7 +83,12 @@ class PlanejamentoController extends Controller
 
         return response()->json($response, Response::HTTP_OK);
     }
-
+    /**
+     * Formata alguns dados das disciplinas
+     *
+     * @param Array $array
+     * @return Array
+     */
     public function parse_diciplinas($array)
     {
         $result = [];
@@ -85,7 +109,11 @@ class PlanejamentoController extends Controller
 
         return $result;
     }
-
+    /**
+     * Exibe tela de importação de arquivo
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function import()
     {
         $anos = [];
@@ -102,7 +130,11 @@ class PlanejamentoController extends Controller
         ];
         return view('adm.planejamento.import', ['breadcrumb' => $breadcrumb, 'anos' => $anos]);
     }
-
+    /**
+     * Exibe tela de listagem de planejamentos
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function list()
     {
         $result = DB::select("select concat(s.ano,'.',s.semestre) as semestre,
@@ -143,13 +175,25 @@ class PlanejamentoController extends Controller
         ];
         return view('adm.planejamento.list', ['planejamentos' => $result, 'breadcrumb' => $breadcrumb]);
     }
-
+    /**
+     * Exibe tela de ajuste de planejamento
+     *
+     * @param int $periodo_letivo
+     * @return \Illuminate\Http\Response
+     */
     public function ajustar($periodo_letivo)
     {
-        if (!$this->isExist($periodo_letivo) || !$this->isAdjust($periodo_letivo)) {
+        if (!$this->isExist($periodo_letivo)) {
             abort(404);
         }
-        $semestre = substr_replace($periodo_letivo, '.', 4, 0);
+        $ano = substr($periodo_letivo, 0, 4);
+        $sem = substr($periodo_letivo, 4);
+        $semestre = format_periodo_letivo($periodo_letivo);
+        $liberado = DB::table('semestres')
+                                  ->select('status')
+                                  ->where('ano', $ano)
+                                  ->where('semestre', $sem)
+                                  ->first();
         $unidades = DB::table('calendars')
                         ->select('unidade', 'unidades.nome')
                         ->join('unidades', 'unidades.codigo', '=', 'calendars.unidade')
@@ -165,9 +209,14 @@ class PlanejamentoController extends Controller
               'Planejamentos' => route('listar-planejamento'),
               'Ajuste de Planejamento' => ''
         ];
-        return view('adm.planejamento.ajustar', ['breadcrumb' => $breadcrumb, 'semestre' => $semestre, 'unidades' => $unidades, 'dias' => $dias, 'horas' => $horas]);
+        return view('adm.planejamento.ajustar', ['breadcrumb' => $breadcrumb, 'semestre' => $semestre, 'unidades' => $unidades, 'dias' => $dias, 'horas' => $horas, 'liberado' => $liberado->status]);
     }
-
+    /**
+     * Atualiza os dados de uma aula
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return string
+     */
     public function update(Request $req)
     {
         $request = json_decode($req->getContent());
@@ -195,7 +244,13 @@ class PlanejamentoController extends Controller
         }
         return response()->json($response, Response::HTTP_OK);
     }
-
+    /**
+     * Retorna as aulas não alocadas
+     *
+     * @param int $periodo_letivo
+     * @param string $unidade
+     * @return string
+     */
     public function getNaoAlocadas($periodo_letivo, $unidade)
     {
         $reusult = DB::table('calendars')
@@ -212,7 +267,7 @@ class PlanejamentoController extends Controller
 
             $value->horario = format_hora($value->hora_inicial) . ' - ' . format_hora($value->hora_final);
             $value->periodo_letivo = format_periodo_letivo($value->periodo_letivo);
-            $value->acao = "<a class='badge badge-primary alocar' href='#' role='button'>link</a>";
+            $value->acao = "<a class='badge badge-primary alocar' href='#' role='button'>Alocar</a>";
 
             $obj->data =  array_flatten((array)$value);
             $nao_alocadas[] = $obj;
@@ -220,17 +275,24 @@ class PlanejamentoController extends Controller
         $response['rows'] = $nao_alocadas;
         return response()->json($response, Response::HTTP_OK);
     }
-
-    public function alocar(Request $req, $periodo_letivo, $unidade)
+    /**
+     * Aloca uma disciplina em uma sala
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $periodo_letivo
+     * @param string $unidade
+     * @return string
+     */
+    public function alocar(Request $request, $periodo_letivo, $unidade)
     {
         $response = [];
-        $calendar = Calendar::find($req->input('modal_id'));
-        $calendar->unidade = $req->input('modal_unidade');
-        $calendar->numero_sala = $req->input('modal_sala');
-        $calendar->dia_semana = $req->input('modal_dia_semana');
-        $calendar->dia_semana_ext = \App\DiaSemana::$dias[$req->input('modal_dia_semana')];
-        $calendar->hora_inicial = $req->input('modal_hora_inicial');
-        $calendar->hora_final = $req->input('modal_hora_final');
+        $calendar = Calendar::find($request->input('modal_id'));
+        $calendar->unidade = $request->input('modal_unidade');
+        $calendar->numero_sala = $request->input('modal_sala');
+        $calendar->dia_semana = $request->input('modal_dia_semana');
+        $calendar->dia_semana_ext = \App\DiaSemana::$dias[$request->input('modal_dia_semana')];
+        $calendar->hora_inicial = $request->input('modal_hora_inicial');
+        $calendar->hora_final = $request->input('modal_hora_final');
 
         $calendar->save();
         $response['action'] = 'update';
@@ -238,8 +300,14 @@ class PlanejamentoController extends Controller
 
         return response()->json($response, Response::HTTP_OK);
     }
-
-    public function delete(Request $req, $periodo_letivo)
+    /**
+     * Exclui um planejamento
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $periodo_letivo
+     * @return \Illuminate\Http\Response
+     */
+    public function delete(Request $request, $periodo_letivo)
     {
         if(!empty($periodo_letivo)) {
             DB::transaction(function () use ($periodo_letivo) {
@@ -250,10 +318,15 @@ class PlanejamentoController extends Controller
             });
         }
 
-        $req->session()->flash('message', 'Planejamento excluído com sucesso!');
+        $request->session()->flash('message', 'Planejamento excluído com sucesso!');
         return redirect()->route('listar-planejamento');
     }
-
+    /**
+     * Exibe a tela de detalhes de um planejamento
+     *
+     * @param int $periodo_letivo
+     * @return \Illuminate\Http\Response
+     */
     public function detalhes($periodo_letivo)
     {
           if (!$this->isExist($periodo_letivo)) {
@@ -286,7 +359,12 @@ class PlanejamentoController extends Controller
           ];
           return view('adm.planejamento.detalhes', ['breadcrumb' => $breadcrumb, 'planejamento' => $planejamento]);
     }
-
+    /**
+     * Verifica se existe o planejamento para o periodo letivo informado
+     *
+     * @param int $periodo_letivo
+     * @return boolean
+     */
     private function isExist($periodo_letivo)
     {
         $ano = substr($periodo_letivo, 0, 4);
@@ -297,19 +375,29 @@ class PlanejamentoController extends Controller
                     ->get();
         return count($result)>0 ? true : false;
     }
-
-    private function isAdjust($periodo_letivo)
+    /**
+     * Altera o status do planejamento
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $periodo_letivo
+     * @return void
+     */
+    public function liberar(Request $request, $periodo_letivo)
     {
         $ano = substr($periodo_letivo, 0, 4);
-        $semestre = substr($periodo_letivo, 4);
-        $result = DB::table('semestres')
-                    ->where('ano', $ano)
-                    ->where('semestre', $semestre)
-                    ->where('status', '0') // status aberto
-                    ->get();
-        return count($result)>0 ? true : false;
+        $sem = substr($periodo_letivo, 4);
+        $semestre = \App\Semestre::where('ano', $ano)
+                                  ->where('semestre', $sem)
+                                  ->first();
+        $semestre->status = !$semestre->status;
+        $semestre->save();
     }
-
+    /**
+     * Retornar disciplinas
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return string
+     */
     public function obter_disciplinas_grid(Request $request)
     {
         $semestre = $request->query('semestre');
@@ -332,5 +420,49 @@ class PlanejamentoController extends Controller
        }
 
        return response()->json($result, Response::HTTP_OK);
+    }
+    /**
+     * Verifica se existe choque de horarios
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return string
+     */
+    public function choque_horario(Request $request, $id)
+    {
+        $periodo_letivo = $request->query('periodo_letivo');
+        $unidade = $request->query('unidade');
+        $numero_sala = $request->query('sala');
+        $dia_semana = $request->query('dia_semana');
+        $hora_inicial = $request->query('hora_inicial');
+        $result = DB::table('calendars')
+                    ->where('id', '<>', $id)
+                    ->where('periodo_letivo', $periodo_letivo)
+                    ->where('unidade', $unidade)
+                    ->where('numero_sala', $numero_sala)
+                    ->where('dia_semana', $dia_semana)
+                    ->when(($hora_inicial[0]=='0'), function($query) use ($hora_inicial) {
+                        return $query->where(function($query) use ($hora_inicial) {
+                                                $query->where('hora_inicial', $hora_inicial)
+                                                      ->orWhere('hora_inicial', substr($hora_inicial, 1));
+                                            });
+                    }, function($query) use ($hora_inicial) {
+                        return $query->where('hora_inicial', $hora_inicial);
+                    })
+                    ->get();
+       $choque_horario = !$result->isEmpty();
+       return response()->json(['choque_horario' => $choque_horario], Response::HTTP_OK);
+    }
+    /**
+     * Desalocar a disciplina da sala de aula
+     *
+     * @param int $id
+     * @return void
+     */
+    public function desalocar($id)
+    {
+        $disciplina = Calendar::find($id);
+        $disciplina->numero_sala = "0";
+        $disciplina->save();
     }
 }
