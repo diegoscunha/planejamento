@@ -156,7 +156,7 @@ class PlanejamentoController extends Controller
                       		    from (select distinct(codigo_disciplina), periodo_letivo from calendars where numero_sala='0'
                               and unidade in(select codigo from unidades)) nao group by nao.periodo_letivo) t
                               on concat(s.ano,s.semestre)=t.periodo_letivo
-                              group by s.ano, s.semestre, t.periodo_letivo
+                              group by s.ano, s.semestre, t.periodo_letivo, s.status
                               order by s.ano desc, s.semestre desc");
         foreach($result as $value) {
             $x = $value->aulas_nao_alocadas * 100;
