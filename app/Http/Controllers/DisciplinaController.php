@@ -106,19 +106,19 @@ class DisciplinaController extends Controller
      * @param int $semestre
      * @return \Illuminate\Http\Response
      */
-    public function obter_disciplinas($semestre)
+    public function obter_disciplinas()
     {
         /* Cria um cahce de 10 min pora essa consulta */
         $minutes = now()->addMinutes(60);
-        Cache::forget('disciplinas'.$semestre);
-        $result = Cache::remember('disciplinas'.$semestre, $minutes, function () use ($semestre) {
+        Cache::forget('disciplinas');
+        $result = Cache::remember('disciplinas', $minutes, function () {
             return DB::table('calendars as c')
                       ->distinct('c.codigo_disciplina')
                       //->select('c.codigo_disciplina as codigo', DB::raw('ifnull(d.nome, " ") as descricao'))
                       ->select('c.codigo_disciplina as codigo', DB::raw('case when d.nome is null then " " when d.nome = "" then " " else d.nome end as descricao'))
                       ->join('unidades as u', 'u.codigo', '=', 'c.unidade')
                       ->leftJoin('disciplinas as d', 'd.codigo', '=', 'c.codigo_disciplina')
-                      ->where('periodo_letivo', $semestre)
+                      //->where('periodo_letivo', $semestre)
                       ->orderBy('codigo_disciplina')
                       ->get();
         });

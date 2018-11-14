@@ -293,6 +293,7 @@ function init_ajustar(events) {
           }
       });
     });
+    $('.dhx_cal_date').html('PLANEJAMENTO SEMANAL');
 }
 
 function init_grid_ajuste() {
