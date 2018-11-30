@@ -59,9 +59,9 @@
                 </div>
                 </td>
                 @if($planejamento->status==1)
-                <td><span class="badge badge-danger">Fechado</span></td>
-                @elseif($planejamento->status==0)
                 <td><span class="badge badge-success">Liberado</span></td>
+                @elseif($planejamento->status==0)
+                <td><span class="badge badge-danger">Bloqueado</span></td>
                 @endif
                 <td>
                   <a class="btn btn-sm btn-brand btn-info" href="{{ route('detalhes-planejamento', ['semestre' => $planejamento->periodo_letivo]) }}" role="button" title="Detalhes"><i class="fa fa-eye"></i></a>
