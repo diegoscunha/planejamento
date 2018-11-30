@@ -36,6 +36,7 @@ Route::get('/api/disciplinas', 'DisciplinaController@obter_disciplinas');
 Route::get('/api/planejamento/{semestre}/liberar', 'PlanejamentoController@liberar')->where('semestre', '[0-9]+')->middleware('auth');
 Route::get('/api/planejamento/choque-horario/{id}', 'PlanejamentoController@choque_horario')->where('id', '[0-9]+')->middleware('auth');
 Route::get('/api/planejamento/desalocar/{id}', 'PlanejamentoController@desalocar')->where('id', '[0-9]+')->middleware('auth');
+Route::post('/api/planejamento/horarios-ociosos', 'PlanejamentoController@horarios_ociosos')->middleware('auth');
 
 // unidades
 Route::get('/adm/unidade', 'UnidadeController@list')->name('listar-unidades')->middleware('auth');

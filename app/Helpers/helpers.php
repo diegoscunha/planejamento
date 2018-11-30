@@ -12,7 +12,7 @@ if (! function_exists('format_hora')) {
             $hora = '0' . $hora;
         if ($hora=='0')
             $hora = '0000';
-            
+
         return substr_replace($hora, ':', 2, 0);
     }
 }
@@ -30,5 +30,32 @@ if (! function_exists('format_date_scheduler')) {
         }
 
         return $date_disciplina;
+    }
+}
+
+if (! function_exists('horarios_remover')) {
+    function horarios_remover($inicial, $final) {
+        $ini = explode(':', $inicial);
+      	$fim = explode(':', $final);
+
+      	$a = new DateTime();
+      	$b = new DateTime();
+      	$c = new DateTime();
+
+      	$a->setTime($ini[0], $ini[1]);
+      	$b->setTime($fim[0], $fim[1]);
+
+      	$diff = $a->diff($b);
+
+      	$num_aulas = ceil((($diff->h * 60) + $diff->i) / 55);
+
+      	$c->setTime($ini[0], $ini[1]);
+      	$result = [];
+      	for($i=0;$i<$num_aulas;$i++) {
+  		      $result[] = str_replace(':', '', $c->format('H:i'));
+    		    $c->add(new \DateInterval('PT55M'));
+      	}
+
+      	return $result;
     }
 }

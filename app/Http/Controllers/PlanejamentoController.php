@@ -335,7 +335,7 @@ class PlanejamentoController extends Controller
           $unidades = DB::select("select t.unidade,
                                   	   sum(case when t.descricao='qtd_salas' then total else 0 end) as qtd_salas,
                                   	   sum(case when t.descricao='qtd_turmas' then total else 0 end) as qtd_turmas,
-                                         sum(case when t.descricao='qtd_disciplinas' then total else 0 end) as qtd_disciplinas
+                                       sum(case when t.descricao='qtd_disciplinas' then total else 0 end) as qtd_disciplinas
                                   from (select unidade, 'qtd_salas' as descricao, count(numero_sala) as total
                                         from (select unidade, numero_sala from calendars where periodo_letivo = ? and unidade in(select codigo from unidades) group by numero_sala, unidade) salas
                                         group by unidade
@@ -464,5 +464,52 @@ class PlanejamentoController extends Controller
         $disciplina = Calendar::find($id);
         $disciplina->numero_sala = "0";
         $disciplina->save();
+    }
+    /**
+     * Buscar horarios ociosos de salas
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return string
+     */
+    public function horarios_ociosos(Request $request)
+    {
+        $periodo_letivo = $request->input('periodo_letivo');
+        $unidade = $request->input('unidade');
+        $sala = $request->input('sala');
+
+        $result = DB::table('calendars as c')
+                    ->select('c.numero_sala', 'c.dia_semana', 'c.hora_inicial', 'c.hora_final')
+                    ->join('unidades as u', 'u.codigo', '=', 'c.unidade')
+                    ->leftJoin('salas as s', 's.unidade_id', '=', 'u.id')
+                    ->where('c.periodo_letivo', $periodo_letivo)
+                    ->where('c.unidade', $unidade)
+                    ->where('c.numero_sala', $sala)
+                    ->groupBy('c.numero_sala', 'c.dia_semana', 'c.hora_inicial', 'c.hora_final')
+                    ->orderBy('c.dia_semana')
+                    ->orderBy('c.numero_sala')
+                    ->get();
+        $result = collect($result)->map(function($x){ return (array) $x; });
+        $salasgroup = $result->groupBy('dia_semana');
+
+        $ociosos = [];
+        for ($i=2;$i<=7;$i++) {
+            $lista = $salasgroup->get($i);
+            $ociosos[$i] = $lista ? $this->listar_horarios_ociosos($lista) : \App\Hora::$horarios;
+        }
+        return response()->json(['horarios_ociosos' => $ociosos], Response::HTTP_OK);
+    }
+
+    private function listar_horarios_ociosos($lista)
+    {
+        $horarios = \App\Hora::$horarios;
+        foreach ($lista as $value) {
+            $inicial = format_hora($value['hora_inicial']);
+            $final = format_hora($value['hora_final']);
+            $remover = horarios_remover($inicial, $final);
+            foreach ($remover as $remove) {
+                unset($horarios[$remove]);
+            }
+        }
+        return $horarios;
     }
 }

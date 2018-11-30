@@ -1,5 +1,47 @@
 $(document).ready(function() {
 
+    $("#unidade_o").change(function() {
+        $('#sala_o').html('');
+        $('#sala_o').append($('<option>', {value: '', text: ':: Selecione ::'}));
+        if ($('#unidade_o').val()) {
+            $('#sala_o').loading({
+                message: 'Carregando...'
+            });
+            semestre = $('#semestre_o').val().replace('.', '');
+            unidade = $('#unidade_o').val();
+            var salas = ajax('GET', '/planejamento/obter-salas/json', {semestre: semestre, unidade: unidade});
+
+            $.each(salas, function(i, sala) {
+                $('#sala_o').append($('<option>', {value: sala.numero_sala, text: 'Sala: ' + sala.numero_sala}));
+            });
+            $('#sala_o').loading('stop');
+        }
+    });
+
+    $('#consultar_o').click(function(evt) {
+        evt.preventDefault();
+        var inputs = $('.filtro_o'),
+            isValid = true;
+
+        $(".filtro_o").removeClass("is-invalid");
+        for(var i=0; i<inputs.length; i++){
+            if (!inputs[i].validity.valid){
+                isValid = false;
+                $(inputs[i]).addClass("is-invalid");
+            }
+        }
+
+        if (isValid) {
+            $('body').loading({
+                message: 'Carregando...'
+            });
+            carregar_horarios_ociosos();
+            //$('#result-ociosos').css('visibility', 'visible');
+            $('#result-ociosos').css('display', 'block');
+            $('body').loading('stop');
+        }
+    });
+
     $('#liberado').click(function(evt) {
         var semestre = $('#semestre').val().replace('.', ''),
             url = '/api/planejamento/' + semestre + '/liberar';

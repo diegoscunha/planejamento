@@ -343,3 +343,25 @@ function limpar_modal() {
     $('#modal_hora_inicial').val('');
     $('#modal_hora_final').val('');
 }
+
+function carregar_horarios_ociosos() {
+    periodo_letivo = $('#semestre_o').val().replace('.', '');
+    unidade = $('#unidade_o').val();
+    sala = $('#sala_o').val();
+    
+    var result = ajax('POST', '/api/planejamento/horarios-ociosos', {periodo_letivo: periodo_letivo, unidade: unidade, sala: sala});
+
+    $.each(result['horarios_ociosos'], function(i, value){
+        montar_tabela_horarios($('#tb-' + i + ' > tbody'), value);
+    });
+}
+
+function montar_tabela_horarios(tbody, dados) {
+    tbody.html('');
+    $.each(dados, function(i, value){
+        linha = "<tr>";
+        linha += "<th scope='row'>" + value + "</th>";
+        linha += "</tr>";
+        $(tbody).append(linha);
+    });
+}

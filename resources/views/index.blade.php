@@ -227,7 +227,6 @@
 			});
 
 			$(function() {
-            var dataSource = [{"codigo":"ARQ003","descricao":"DESCRITIVA I"},{"codigo":"ARQ004","descricao":"DESCRITIVA II"},{"codigo":"ARQ005","descricao":"DESENHO GEOMETRICO I"},{"codigo":"ARQ006","descricao":"DESENHO GEOMETRICO II"},{"codigo":"ARQ009","descricao":"INTRODUCAO A ARQUITETURA"}];
             $('#basic').magicsearch({
                 //dataSource: dataSource,
 								dataSource: '/api/disciplinas',

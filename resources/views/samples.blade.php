@@ -65,7 +65,7 @@
       <!-- /.container-fluid -->
     </main>
 
-    @include('core.asidemenu')
+    {{-- @include('core.asidemenu') --}}
 
   </div>
 
