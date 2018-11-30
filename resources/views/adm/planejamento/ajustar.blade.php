@@ -15,7 +15,7 @@
                <a class="nav-link active" id="ajustar-tab" data-toggle="tab" href="#ajustar" role="tab" aria-controls="ajustar" aria-selected="true">Ajuste de Planejamento</a>
             </li>
             <li class="nav-item">
-               <a class="nav-link" id="ociosas-tab" data-toggle="tab" href="#ociosas" role="tab" aria-controls="ociosas" aria-selected="false">Consultar horários ociosos</a>
+               <a class="nav-link" id="ociosas-tab" data-toggle="tab" href="#ociosas" role="tab" aria-controls="ociosas" aria-selected="false">Consultar horários livres</a>
             </li>
          </ul>
          <div class="tab-content" id="myTabContent">
