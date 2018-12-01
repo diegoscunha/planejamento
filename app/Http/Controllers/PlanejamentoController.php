@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DB;
 use App\Calendar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -498,7 +499,12 @@ class PlanejamentoController extends Controller
         }
         return response()->json(['horarios_ociosos' => $ociosos], Response::HTTP_OK);
     }
-
+    /**
+     * Listar horarios ociosos para as salas
+     *
+     * @param Array $lista
+     * @return Array
+     */
     private function listar_horarios_ociosos($lista)
     {
         $horarios = \App\Hora::$horarios;
@@ -511,5 +517,43 @@ class PlanejamentoController extends Controller
             }
         }
         return $horarios;
+    }
+    /**
+     * Gerar relatório de alocação
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return string
+     */
+    public function realtorio_alocacao(Request $request)
+    {
+        /* Cria um cahce de 60 min pora essa consulta */
+        $minutes = now()->addMinutes(60);
+        $result = Cache::remember('relatorio', $minutes, function () {
+            return DB::table('calendars as c')
+                    ->select('c.periodo_letivo', 'c.unidade', 'u.nome', 'c.codigo_disciplina', DB::raw('ifnull(d.nome, " ") as nome_disciplina'), 'c.turma',
+                             'c.numero_sala', 'c.dia_semana', DB::raw('trim(c.dia_semana_ext) as dia_semana_ext'), 'c.hora_inicial',
+                             'c.hora_final', DB::raw('trim(c.docente) as docente'))
+                    ->join('unidades as u', 'u.codigo', '=', 'c.unidade')
+                    ->leftJoin('disciplinas as d', 'd.codigo', '=', 'c.codigo_disciplina')
+                    ->where('c.periodo_letivo', '20182')
+                    ->where('c.unidade', 'PAF')
+                    ->groupBy('c.periodo_letivo', 'c.unidade', 'u.nome', 'c.codigo_disciplina', 'd.nome', 'c.numero_sala', 'c.turma', 'c.dia_semana', 'c.dia_semana_ext', 'c.hora_inicial', 'c.hora_final', 'c.docente')
+                    ->orderBy('c.unidade')
+                    ->orderBy('c.codigo_disciplina')
+                    ->orderBy('c.turma')
+                    ->orderBy('c.numero_sala')
+                    ->orderBy('c.dia_semana')
+                    ->get();
+        });
+        $result = collect($result)->map(function($x){ return (array) $x; });
+        $unidadesgroup = $result->groupBy('unidade');
+
+        $html = view('adm.relatorios.rel_alocacao', ['semestre' => '2018.2', 'dados' => $unidadesgroup])->render();
+
+        //dd($html);
+
+        $pdf = \PDF::loadHTML($html);
+        return $pdf->download('invoice.pdf');
+        //return view('adm.relatorios.rel_alocacao', ['semestre' => '2018.2', 'dados' => $unidadesgroup]);
     }
 }

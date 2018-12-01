@@ -108,9 +108,8 @@ class DisciplinaController extends Controller
      */
     public function obter_disciplinas()
     {
-        /* Cria um cahce de 10 min pora essa consulta */
+        /* Cria um cahce de 60 min pora essa consulta */
         $minutes = now()->addMinutes(60);
-        Cache::forget('disciplinas');
         $result = Cache::remember('disciplinas', $minutes, function () {
             return DB::table('calendars as c')
                       ->distinct('c.codigo_disciplina')

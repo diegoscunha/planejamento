@@ -19,6 +19,7 @@ Route::get('/adm/planejamento', 'PlanejamentoController@list')->middleware('auth
 Route::get('/adm/planejamento/adicionar', 'PlanejamentoController@import')->middleware('auth')->name('importar-planejamento');
 Route::post('/adm/planejamento/importar', 'CsvImportController@store')->middleware('auth')->name('importar');
 Route::get('/adm/planejamento/ajustar-planejamento/{periodo_letivo}', 'PlanejamentoController@ajustar')->where('periodo_letivo', '[0-9]+')->middleware('auth')->name('ajustar-planejamento');
+Route::get('/adm/planejamento/relatorio', 'PlanejamentoController@realtorio_alocacao')->middleware('auth')->name('relatorio-alocacao');
 
 Route::get('/adm/planejamento/excluir/{periodo_letivo}', 'PlanejamentoController@delete')->where('periodo_letivo', '[0-9]+')->middleware('auth')->name('excluir-planejamento');
 Route::get('/adm/planejamento/detalhes/{periodo_letivo}', 'PlanejamentoController@detalhes')->where('periodo_letivo', '[0-9]+')->middleware('auth')->name('detalhes-planejamento');
