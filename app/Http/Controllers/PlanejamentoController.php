@@ -549,9 +549,7 @@ class PlanejamentoController extends Controller
         $unidadesgroup = $result->groupBy('unidade');
 
         $html = view('adm.relatorios.rel_alocacao', ['semestre' => '2018.2', 'dados' => $unidadesgroup])->render();
-
         //dd($html);
-
         $pdf = \PDF::loadHTML($html);
         return $pdf->download('invoice.pdf');
         //return view('adm.relatorios.rel_alocacao', ['semestre' => '2018.2', 'dados' => $unidadesgroup]);
