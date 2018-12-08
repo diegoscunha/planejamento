@@ -529,7 +529,7 @@ class PlanejamentoController extends Controller
         /* Cria um cahce de 60 min pora essa consulta */
         $minutes = now()->addMinutes(60);
         $result = Cache::remember('relatorio', $minutes, function () {
-            return DB::table('calendars as c')
+            $r = DB::table('calendars as c')
                     ->select('c.periodo_letivo', 'c.unidade', 'u.nome', 'c.codigo_disciplina', DB::raw('ifnull(d.nome, " ") as nome_disciplina'), 'c.turma',
                              'c.numero_sala', 'c.dia_semana', DB::raw('trim(c.dia_semana_ext) as dia_semana_ext'), 'c.hora_inicial',
                              'c.hora_final', DB::raw('trim(c.docente) as docente'))
@@ -544,9 +544,11 @@ class PlanejamentoController extends Controller
                     ->orderBy('c.numero_sala')
                     ->orderBy('c.dia_semana')
                     ->get();
+                    $r = collect($r)->map(function($x){ return (array) $x; });
+                    return $r->groupBy('unidade');
         });
-        $result = collect($result)->map(function($x){ return (array) $x; });
-        $unidadesgroup = $result->groupBy('unidade');
+        //$result = collect($result)->map(function($x){ return (array) $x; });
+        $unidadesgroup = $result;
 
         $html = view('adm.relatorios.rel_alocacao', ['semestre' => '2018.2', 'dados' => $unidadesgroup])->render();
         //dd($html);

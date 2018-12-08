@@ -4,13 +4,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Relatorio de Alocacao</title>
     <!-- Styles -->
-    <!-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> -->
+    <!--<link href="{{ asset('css/app.css') }}" rel="stylesheet"> -->
 </head>
 <body style="font-family: Times, 'Times New Roman', Georgia, serif;">
     <div class="container">
         <div class="row">
             <div class="col-sm text-center">
-                <h3><strong>Relatorio de Alocacao</strong></h3>
+                <h3><strong>Relatório de Alocação</strong></h3>
             </div>
         </div>
         <div class="row">

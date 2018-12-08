@@ -21,7 +21,7 @@
 	<link href="{{ asset('css/jquery.magicsearch.min.css') }}" rel="stylesheet">
 
 	<!-- Scripts -->
-	<!--<script src="{{ asset('js/app_old.js') }}" defer></script> -->
+	<script src="{{ asset('js/app_index.js') }}"></script>
 
 	<!-- Fonts -->
 	<link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -51,7 +51,6 @@
           	<!-- Authentication Links -->
             @guest
             <li><a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a></li>
-            <!-- <li><a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a></li> -->
             @else
             <li class="nav-item dropdown">
 	            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -62,7 +61,9 @@
                 <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                     {{ __('Logout') }}
                 </a>
-
+								<a class="dropdown-item" href="{{ route('adm') }}">
+										Acessar Área Administrativa
+								</a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                     @csrf
                 </form>
@@ -205,59 +206,6 @@
 		<script src="{{ asset('js/jquery.loading.js') }}" type="text/javascript" ></script>
 		<script src="{{ asset('js/script.js') }}" type="text/javascript" charset="utf-8"></script>
 		<script src="{{ asset('js/functions.js') }}" type="text/javascript" charset="utf-8"></script>
-
-		<!-- <script src="{{ asset('js/jquery-2.2.3.min.js') }}" type="text/javascript" charset="utf-8"></script> -->
 		<script src="{{ asset('js/jquery.magicsearch.js') }}" type="text/javascript" charset="utf-8"></script>
-
-		<script type="text/javascript">
-			// Exportação
-			function exports(type) {
-					exportScheduler(type, $('#unidade option:selected').text(), $('#sala option:selected').text());
-			}
-
-			$('#op_disciplina, #op_sala').change(function (evt) {
-					if($(this).attr('id')=='op_disciplina') {
-							$('#filtro_sala').hide();
-							$('#filtro_disciplina').show();
-					} else if ($(this).attr('id')=='op_sala') {
-							$('#filtro_disciplina').hide();
-							$('#filtro_sala').show();
-					}
-
-			});
-
-			$(function() {
-            $('#basic').magicsearch({
-                //dataSource: dataSource,
-								dataSource: '/api/disciplinas',
-								type: 'ajax',
-								// ajax options
-								ajaxOptions: {
-									headers: {
-										'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-									}
-								},
-                fields: ['codigo', 'descricao'],
-                id: 'codigo',
-                format: '%codigo% - %descricao%',
-								// show selected options
-								showSelected: false,
-                multiple: true,
-                multiField: 'codigo',
-                multiStyle: {
-                    space: 5,
-                    width: 80
-                },
-								// show dropdown button
-  							dropdownBtn: true,
-								// max number of results
-								maxShow: 5,
-								// text when no results
-								noResult: 'Disciplina não encontrada!',
-            });
-						$('#filtro_disciplina').css('visibility', 'visible');
-						$('#filtro_disciplina').hide();
-        });
-		</script>
 	</body>
 </html>

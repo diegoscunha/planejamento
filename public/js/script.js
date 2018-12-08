@@ -1,4 +1,47 @@
 $(document).ready(function() {
+
+    $('#op_disciplina, #op_sala').change(function (evt) {
+        if($(this).attr('id')=='op_disciplina') {
+            $('#filtro_sala').hide();
+            $('#filtro_disciplina').show();
+        } else if ($(this).attr('id')=='op_sala') {
+            $('#filtro_disciplina').hide();
+            $('#filtro_sala').show();
+        }
+
+    });
+
+    $('#basic').magicsearch({
+        //dataSource: dataSource,
+        dataSource: '/api/disciplinas',
+        type: 'ajax',
+        // ajax options
+        ajaxOptions: {
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+        },
+        fields: ['codigo', 'descricao'],
+        id: 'codigo',
+        format: '%codigo% - %descricao%',
+        // show selected options
+        showSelected: false,
+        multiple: true,
+        multiField: 'codigo',
+        multiStyle: {
+            space: 5,
+            width: 80
+        },
+        // show dropdown button
+        dropdownBtn: true,
+        // max number of results
+        maxShow: 5,
+        // text when no results
+        noResult: 'Disciplina não encontrada!',
+    });
+    $('#filtro_disciplina').css('visibility', 'visible');
+    $('#filtro_disciplina').hide();
+
     $('#pesquisar').click(function(evt) {
         evt.preventDefault();
         var inputsFiltro = $('.filtro'),
@@ -48,9 +91,9 @@ $(document).ready(function() {
             if(tipoFiltro=='S') {
                 $('#table-disc').hide();
                 var events = buscar_disciplinas();
-                refresh_calendar(events);
                 $('#btn-exports').show();
                 $('#scheduler_here').show();
+                refresh_calendar(events);
             } else if(tipoFiltro=='D') {
                 $('#btn-exports').hide();
                 $('#scheduler_here').hide();

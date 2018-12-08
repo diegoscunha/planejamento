@@ -71,6 +71,11 @@ function montar_grid(semestre, params) {
 }
 
 // Exportação
+function exports(type) {
+    exportScheduler(type, $('#unidade option:selected').text(), $('#sala option:selected').text());
+}
+
+// Exportação
 var header = "<p><h1>Sistema de Planejamento Acadêmico</h1></p><h3>Universidade Federal da Bahia</h3><h3>{UNIDADE}</h3><h3>{SALA}</h3>",
     footer = "Sistema de Planejamento Acadêmico UFBA";
 
@@ -164,6 +169,8 @@ function init_consultar(events) {
     scheduler.config.last_hour = 23;
     scheduler.init('scheduler_here', new Date(), 'week');
     scheduler.parse(events, "json"); // takes the name and format of the data source
+
+    $('.dhx_cal_date').html('PLANEJAMENTO SEMANAL');
 }
 
 function init_ajustar(events) {
@@ -348,7 +355,7 @@ function carregar_horarios_ociosos() {
     periodo_letivo = $('#semestre_o').val().replace('.', '');
     unidade = $('#unidade_o').val();
     sala = $('#sala_o').val();
-    
+
     var result = ajax('POST', '/api/planejamento/horarios-ociosos', {periodo_letivo: periodo_letivo, unidade: unidade, sala: sala});
 
     $.each(result['horarios_ociosos'], function(i, value){

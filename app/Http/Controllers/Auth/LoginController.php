@@ -60,7 +60,7 @@ class LoginController extends Controller
         $credentials['ativo'] = true;
 
         return $this->guard()->attempt(
-            $credentials, $request->filled('remember')
+            $credentials
         );
     }
 }
