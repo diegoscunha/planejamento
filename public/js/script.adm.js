@@ -20,7 +20,7 @@ $(document).ready(function() {
             });
             semestre = $('#semestre').val().replace('.','');
             unidade = $('#unidade_r').val();
-            window.open('/adm/planejamento/relatorio/' + semestre + '/' + unidade);
+            window.open('/adm/planejamento/relatorio/' + semestre + '/' + unidade, '_blank');
             $('body').loading('stop');
         }
     });

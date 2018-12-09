@@ -6,7 +6,7 @@
     <!-- Styles -->
     <!--link href="{{ asset('css/app.css') }}" rel="stylesheet"-->
     <style media="screen">
-      body {
+      /*body {
         margin: 0;
         font-family: Raleway,sans-serif;
         font-size: .9rem;
@@ -36,16 +36,16 @@
         margin-left: -15px;
       }
       .col-sm {
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-}
+        -ms-flex-preferred-size: 0;
+        flex-basis: 0;
+        -webkit-box-flex: 1;
+        -ms-flex-positive: 1;
+        flex-grow: 1;
+        max-width: 100%;
+      }
       .text-center {
-    text-align: center!important;
-}
+        text-align: center!important;
+      }
       .h3, h3 {
         font-size: 1.575rem;
       }
@@ -98,7 +98,7 @@
       }
       th {
           text-align: inherit;
-      }
+      }*/
     </style>
 </head>
 <body style="font-family: Times, 'Times New Roman', Georgia, serif;">
