@@ -528,15 +528,15 @@ class PlanejamentoController extends Controller
     {
         /* Cria um cahce de 60 min pora essa consulta */
         $minutes = now()->addMinutes(60);
-        $result = Cache::remember('relatorio', $minutes, function () {
+        $result = Cache::remember('relatorio', $minutes, function () use ($semestre, $unidade) {
             $r = DB::table('calendars as c')
                     ->select('c.periodo_letivo', 'c.unidade', 'u.nome', 'c.codigo_disciplina', DB::raw('ifnull(d.nome, " ") as nome_disciplina'), 'c.turma',
                              'c.numero_sala', 'c.dia_semana', DB::raw('trim(c.dia_semana_ext) as dia_semana_ext'), 'c.hora_inicial',
                              'c.hora_final', DB::raw('trim(c.docente) as docente'))
                     ->join('unidades as u', 'u.codigo', '=', 'c.unidade')
                     ->leftJoin('disciplinas as d', 'd.codigo', '=', 'c.codigo_disciplina')
-                    ->where('c.periodo_letivo', '20182')
-                    ->where('c.unidade', 'PAF')
+                    ->where('c.periodo_letivo', $semestre)
+                    ->where('c.unidade', $unidade)
                     ->groupBy('c.periodo_letivo', 'c.unidade', 'u.nome', 'c.codigo_disciplina', 'd.nome', 'c.numero_sala', 'c.turma', 'c.dia_semana', 'c.dia_semana_ext', 'c.hora_inicial', 'c.hora_final', 'c.docente')
                     ->orderBy('c.unidade')
                     ->orderBy('c.codigo_disciplina')
@@ -550,9 +550,7 @@ class PlanejamentoController extends Controller
         $unidadesgroup = $result;
 
         $html = view('adm.relatorios.rel_alocacao', ['semestre' => '2018.2', 'dados' => $unidadesgroup])->render();
-        //dd($html);
         $pdf = \PDF::loadHTML($html);
         return $pdf->download('invoice.pdf');
-        //return view('adm.relatorios.rel_alocacao', ['semestre' => '2018.2', 'dados' => $unidadesgroup]);
     }
 }
