@@ -524,7 +524,7 @@ class PlanejamentoController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return string
      */
-    public function realtorio_alocacao(Request $request)
+    public function realtorio_alocacao($semestre, $unidade)
     {
         /* Cria um cahce de 60 min pora essa consulta */
         $minutes = now()->addMinutes(60);
@@ -547,7 +547,6 @@ class PlanejamentoController extends Controller
                     $r = collect($r)->map(function($x){ return (array) $x; });
                     return $r->groupBy('unidade');
         });
-        //$result = collect($result)->map(function($x){ return (array) $x; });
         $unidadesgroup = $result;
 
         $html = view('adm.relatorios.rel_alocacao', ['semestre' => '2018.2', 'dados' => $unidadesgroup])->render();

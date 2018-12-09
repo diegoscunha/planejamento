@@ -1,5 +1,30 @@
 $(document).ready(function() {
 
+    $('#gerar_r').click(function(evt){
+        evt.preventDefault();
+
+        var inputs = $('.filtro_r'),
+            isValid = true;
+
+        $(".filtro_r").removeClass("is-invalid");
+        for(var i=0; i<inputs.length; i++){
+            if (!inputs[i].validity.valid){
+                isValid = false;
+                $(inputs[i]).addClass("is-invalid");
+            }
+        }
+
+        if (isValid) {
+            $('body').loading({
+                message: 'Carregando...'
+            });
+            semestre = $('#semestre').val().replace('.','');
+            unidade = $('#unidade_r').val();
+            window.open('/adm/planejamento/relatorio/' + semestre + '/' + unidade);
+            $('body').loading('stop');
+        }
+    });
+
     $("#unidade_o").change(function() {
         $('#sala_o').html('');
         $('#sala_o').append($('<option>', {value: '', text: ':: Selecione ::'}));

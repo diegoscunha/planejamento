@@ -17,8 +17,11 @@
             <li class="nav-item">
                <a class="nav-link" id="ociosas-tab" data-toggle="tab" href="#ociosas" role="tab" aria-controls="ociosas" aria-selected="false">Consultar horários livres</a>
             </li>
+            <li class="nav-item">
+               <a class="nav-link" id="relatorio-tab" data-toggle="tab" href="#relatorio" role="tab" aria-controls="relatorio" aria-selected="false">Relatório de Alocação</a>
+            </li>
          </ul>
-         <div class="tab-content" id="myTabContent">
+         <div class="tab-content" id="tab-principal">
             <div class="tab-pane fade show active" id="ajustar" role="tabpanel" aria-labelledby="ajustar-tab">
                <div class="row">
                   <div class="col-6">
@@ -172,6 +175,19 @@
                   </div>
                </div>
                <div class="row">
+                   <div id="btn-exports" class='controls'>
+                   		<button type="button" class="btn btn-sm btn-danger" onclick='exports("pdf")'>
+				                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF
+           						</button>
+                   		<button type="button" class="btn btn-sm btn-primary" onclick='exports("png")'>
+				                    <i class="fa fa-picture-o" aria-hidden="true"></i> PNG
+           						</button>
+                   		<button type="button" class="btn btn-sm btn-success" onclick='exports("excel")'>
+       							        <i class="fa fa-file-excel-o" aria-hidden="true"></i> Excel
+           						</button>
+             			</div>
+               </div>
+               <div class="row">
                   <div class="col-md-12" style='width:1000px; height:800px; padding:0px;'>
                      <div id="scheduler_here" class="dhx_cal_container" style='width:100%; height:100%;'>
                         <div class="dhx_cal_navline">
@@ -247,7 +263,7 @@
                           <a class="nav-link" id="sabado-tab" data-toggle="tab" href="#sabado" role="tab" aria-controls="sabado" aria-selected="false">Sábado</a>
                         </li>
                       </ul>
-                      <div class="tab-content" id="myTabContent">
+                      <div class="tab-content" id="tab-dias-semana">
                           <div class="tab-pane fade show active" id="segunda-feira" role="tabpanel" aria-labelledby="segunda-feira-tab">
                               <div class="col-2">
                                   <table id="tb-2" class="table table-sm table-bordered">
@@ -329,6 +345,31 @@
                       </div>
                   </div>
                </div>
+            </div>
+            <div class="tab-pane fade" id="relatorio" role="tabpanel" aria-labelledby="relatorio-tab">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <form id="relatorio" action="#" class="needs-validation" novalidate>
+                            <div class="form-group row">
+                               <label for="unidade_r" class="col-sm-3 col-form-label">Unidade</label>
+                               <div class="col-sm-6">
+                                  <select id="unidade_r" name="unidade_r" class="form-control form-control-sm filtro_r" required>
+                                     <option value="">:: Selecione ::</option>
+                                     @foreach($unidades as $unidade)
+                                     <option value="{{ $unidade->unidade }}">{{ $unidade->unidade . ' - ' . $unidade->nome }}</option>
+                                     @endforeach
+                                  </select>
+                                  <div class="invalid-feedback">
+                                     Por favor, selecione uma unidade.
+                                  </div>
+                               </div>
+                            </div>
+                            <div class="form-group">
+                               <button id="gerar_r" class="btn btn-primary">Gerar relatório</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
          </div>
       </div>

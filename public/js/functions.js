@@ -99,7 +99,7 @@ function exportScheduler(type, unidade, sala) {
         });
     } else {
         scheduler.exportToExcel({
-            name:"My document.xlsx",
+            name:"calendar.xlsx",
             columns:[
               { id:"start_date", header:"Start date", width:80 },
               { id:"end_date", header:"End date", width:80 },
