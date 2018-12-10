@@ -5,10 +5,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="CoreUI Bootstrap 4 Admin Template">
-  <meta name="author" content="Lukasz Holeczek">
-  <meta name="keyword" content="CoreUI Bootstrap 4 Admin Template">
-  <!-- <link rel="shortcut icon" href="assets/ico/favicon.png"> -->
+  <link rel="shortcut icon" href="{{ asset('img/favicon.png') }}">
 
   <title>{{ config('app.name', 'Laravel') }}</title>
 
@@ -28,16 +25,10 @@
       <div class="col-md-6">
         <div class="clearfix">
           <h1 class="float-left display-3 mr-4">404</h1>
-          <h4 class="pt-3">Oops! You're lost.</h4>
-          <p class="text-muted">The page you are looking for was not found.</p>
+          <h4 class="pt-3">Opa! Você está perdido.</h4>
+          <p class="text-muted">A página que você está procurando não foi encontrada.</p>
         </div>
-        <div class="input-prepend input-group">
-          <span class="input-group-addon"><i class="fa fa-search"></i></span>
-          <input id="prependedInput" class="form-control" size="16" type="text" placeholder="What are you looking for?">
-          <span class="input-group-btn">
-            <button class="btn btn-info" type="button">Search</button>
-          </span>
-        </div>
+        <button type="button" class="btn btn-primary" onclick="window.history.back();">Voltar</button>
       </div>
     </div>
   </div>
