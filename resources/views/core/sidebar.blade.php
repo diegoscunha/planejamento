@@ -29,7 +29,7 @@
         Registro de modificações
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="/sample/charts"><i class="fa fa-file-text-o "></i> Logs</a>
+        <a class="nav-link" href="{{ route('listar-logs') }}"><i class="fa fa-file-text-o "></i> Logs</a>
       </li>
     </ul>
   </nav>

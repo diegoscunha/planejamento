@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Log;
+use App\Enum\OperationLog;
 use App\User;
 use App\Mail\CreatedUser;
 use Illuminate\Support\Facades\Mail;
@@ -85,6 +87,9 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+
+        Log::channel('database')->info(OperationLog::CREATED, ['user' => \Auth::user(), 'funcionalidade' => 'Usuário', 'new' => $user]);
+
         $user->senha = $data['password'];
         Mail::to($data['email'])->send(new CreatedUser($user));
         return $user;

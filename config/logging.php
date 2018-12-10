@@ -76,6 +76,17 @@ return [
             'driver' => 'errorlog',
             'level' => 'debug',
         ],
+
+        'database' => [
+            'driver' => 'custom',
+            'via' => danielme85\LaravelLogToDB\LogToDbHandler::class,
+            'level' => env('APP_LOG_LEVEL', 'info'),
+            'name' => 'Logsystem',
+            'connection' => 'default',
+            'collection' => 'log',
+            'detailed' => true,
+            'max_rows' => false
+        ]
     ],
 
 ];

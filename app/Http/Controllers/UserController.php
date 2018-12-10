@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Log;
+use App\Enum\OperationLog;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\User;
@@ -55,11 +57,15 @@ class UserController extends Controller
         $input = $request->input();
         $usuario = User::find($input['id']);
 
+        $old_usuario = clone($usuario);
+
         $usuario->name = $input['name'];
         $usuario->email = $input['email'];
 
         try {
             $usuario->save();
+
+            Log::channel('database')->info(OperationLog::UPDATED, ['user' => \Auth::user(), 'funcionalidade' => 'Usuário', 'new' => $usuario, 'old' => $old_usuario]);
         } catch(\Illuminate\Database\QueryException $e) {
             return back()->withErrors('E-mail já cadastrado no banco de dados!')->withInput($request->all());
         }
@@ -78,8 +84,10 @@ class UserController extends Controller
         $msg = "";
         if(!empty($id)) {
             $usuario = User::findOrfail($id);
+            $old_usuario = clone($usuario);
             $usuario->ativo = !$usuario->ativo;
             $usuario->save();
+            Log::channel('database')->info(OperationLog::UPDATED, ['user' => \Auth::user(), 'funcionalidade' => 'Usuário', 'new' => $usuario, 'old' => $old_usuario]);
             $msg = $usuario->ativo ? 'Usuário ativado com sucesso!' : 'Usuário desativado com sucesso!';
         }
 

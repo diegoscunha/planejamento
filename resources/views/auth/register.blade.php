@@ -6,7 +6,7 @@
     <div class="card-body">
       <div class="row">
         <div class="col-sm-5">
-          <h1 class="card-title mb-0">Nova Usuário</h1>
+          <h1 class="card-title mb-0">Novo Usuário</h1>
           <div class="small text-muted">Novo registro de usuário</div>
         </div>
       </div>

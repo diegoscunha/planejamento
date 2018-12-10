@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Log;
+use App\Enum\OperationLog;
 use App\Calendar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -227,6 +229,9 @@ class PlanejamentoController extends Controller
             $response['error'] = 'Não foi possivel atualizar';
         } else {
             $calendar = Calendar::find($request->id);
+
+            $calendar_old = clone($calendar);
+
             $calendar->unidade = $request->data->unidade;
             $calendar->numero_sala = $request->data->numero_sala;
             $calendar->tipo_sala = $request->data->tipo_sala;
@@ -240,6 +245,9 @@ class PlanejamentoController extends Controller
             $calendar->dia_semana_ext = \App\DiaSemana::$dias[$request->data->dia_semana];
 
             $calendar->save();
+
+            Log::channel('database')->info(OperationLog::UPDATED, ['user' => \Auth::user(), 'funcionalidade' => 'Planejamento', 'new' => $calendar, 'old' => $calendar_old]);
+
             $response['action'] = 'update';
             $response['message'] = 'Registro salvo com sucesso!';
         }
@@ -288,6 +296,9 @@ class PlanejamentoController extends Controller
     {
         $response = [];
         $calendar = Calendar::find($request->input('modal_id'));
+
+        $calendar_old = clone($calendar);
+
         $calendar->unidade = $request->input('modal_unidade');
         $calendar->numero_sala = $request->input('modal_sala');
         $calendar->dia_semana = $request->input('modal_dia_semana');
@@ -296,6 +307,9 @@ class PlanejamentoController extends Controller
         $calendar->hora_final = $request->input('modal_hora_final');
 
         $calendar->save();
+
+        Log::channel('database')->info(OperationLog::UPDATED, ['user' => \Auth::user(), 'funcionalidade' => 'Planejamento', 'new' => $calendar, 'old' => $calendar_old]);
+
         $response['action'] = 'update';
         $response['message'] = 'Registro salvo com sucesso!';
 
@@ -317,6 +331,7 @@ class PlanejamentoController extends Controller
                 DB::table('semestres')->where('ano', $ano)->where('semestre', $semestre)->delete();
                 DB::table('calendars')->where('periodo_letivo', $ano.$semestre)->delete();
             });
+            Log::channel('database')->info(OperationLog::DELETED, ['user' => \Auth::user(), 'funcionalidade' => 'Planejamento', 'old' => 'Planejamento ' . $periodo_letivo . ' excluído']);
         }
 
         $request->session()->flash('message', 'Planejamento excluído com sucesso!');
@@ -391,7 +406,9 @@ class PlanejamentoController extends Controller
                                   ->where('semestre', $sem)
                                   ->first();
         $semestre->status = !$semestre->status;
+        $msg = $semestre->status ? "Planejamento $periodo_letivo liberado" : "Planejamento $periodo_letivo bloqueado";
         $semestre->save();
+        Log::channel('database')->info(OperationLog::UPDATED, ['user' => \Auth::user(), 'funcionalidade' => 'Planejamento', 'old' => $msg]);
     }
     /**
      * Retornar disciplinas
@@ -463,8 +480,12 @@ class PlanejamentoController extends Controller
     public function desalocar($id)
     {
         $disciplina = Calendar::find($id);
+
+        $disciplina_old = clone($disciplina);
+
         $disciplina->numero_sala = "0";
         $disciplina->save();
+        Log::channel('database')->info(OperationLog::UPDATED, ['user' => \Auth::user(), 'funcionalidade' => 'Planejamento', 'new' => $disciplina, 'old' => $disciplina_old]);
     }
     /**
      * Buscar horarios ociosos de salas

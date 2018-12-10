@@ -60,6 +60,9 @@ Route::get('/adm/sala/editar/{id}', 'SalaController@editar')->where('id', '[0-9]
 Route::post('/adm/sala/save', 'SalaController@save')->name('salvar-sala')->middleware('auth');
 Route::get('/adm/sala/delete/{id}', 'SalaController@delete')->where('id', '[0-9]+')->name('excluir-sala')->middleware('auth');
 
+// logs
+Route::get('/adm/logs', 'LogController@list')->name('listar-logs')->middleware('auth');
+
 // usuarios
 Route::get('/adm/usuario', 'UserController@list')->name('listar-usuarios')->middleware('auth');
 Route::get('/adm/usuario/ativar/{id}', 'UserController@ativar_desativar')->where('id', '[0-9]+')->name('ativar-usuario')->middleware('auth');

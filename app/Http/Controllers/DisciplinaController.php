@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Log;
+use App\Enum\OperationLog;
 use App\Models\Disciplina;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
@@ -57,10 +59,19 @@ class DisciplinaController extends Controller
             $disciplina = new Disciplina();
             $disciplina->id = $input['id'];
         }
+
+        $old_disciplina = clone($disciplina);
+
         $disciplina->codigo = strtoupper($input['codigo']);
         $disciplina->nome = $input['nome'];
         try {
             $disciplina->save();
+
+            if($disciplina->wasRecentlyCreated) {
+                Log::channel('database')->info(OperationLog::CREATED, ['user' => \Auth::user(), 'funcionalidade' => 'Disciplina', 'new' => $disciplina]);
+            } else {
+                Log::channel('database')->info(OperationLog::UPDATED, ['user' => \Auth::user(), 'funcionalidade' => 'Disciplina', 'new' => $disciplina, 'old' => $old_disciplina]);
+            }
         } catch(\Illuminate\Database\QueryException $e) {
             return back()->withErrors('Código de disciplina já cadastrado no banco de dados!')->withInput($request->all());
         }
@@ -94,7 +105,9 @@ class DisciplinaController extends Controller
     {
         if(!empty($id)) {
             $disciplina = Disciplina::findOrfail($id);
+            $old_disciplina = clone($disciplina);
             $disciplina->delete();
+            Log::channel('database')->info(OperationLog::DELETED, ['user' => \Auth::user(), 'funcionalidade' => 'Disciplina',  'old' => $old_disciplina]);
         }
 
         $req->session()->flash('message', 'Disciplina excluída com sucesso!');
@@ -113,11 +126,9 @@ class DisciplinaController extends Controller
         $result = Cache::remember('disciplinas', $minutes, function () {
             return DB::table('calendars as c')
                       ->distinct('c.codigo_disciplina')
-                      //->select('c.codigo_disciplina as codigo', DB::raw('ifnull(d.nome, " ") as descricao'))
                       ->select('c.codigo_disciplina as codigo', DB::raw('case when d.nome is null then " " when d.nome = "" then " " else d.nome end as descricao'))
                       ->join('unidades as u', 'u.codigo', '=', 'c.unidade')
                       ->leftJoin('disciplinas as d', 'd.codigo', '=', 'c.codigo_disciplina')
-                      //->where('periodo_letivo', $semestre)
                       ->orderBy('codigo_disciplina')
                       ->get();
         });

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Log;
+use App\Enum\OperationLog;
 use App\Acme\Importing\CsvFileImporter;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
@@ -62,6 +64,8 @@ class CsvImportController extends BaseController
                             $sem->semestre = $semestre;
                             $sem->user_id = \Auth::user()->id;
                             $sem->save();
+
+                            Log::channel('database')->info(OperationLog::CREATED, ['user' => \Auth::user(), 'funcionalidade' => 'Planejamento', 'new' => 'Planejamento importado ' . $ano . $semestre]);
 
                             $message = 'Arquivo importado com sucesso!';
                             $session = 'success';

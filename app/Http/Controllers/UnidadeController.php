@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Log;
+use App\Enum\OperationLog;
 use Illuminate\Http\Request;
 use App\Models\Unidade;
 
@@ -54,10 +56,19 @@ class UnidadeController extends Controller
             $unidade = new Unidade();
             $unidade->id = $input['id'];
         }
+
+        $old_unidade = clone($unidade);
+
         $unidade->codigo = strtoupper($input['codigo']);
         $unidade->nome = $input['nome'];
         try {
             $unidade->save();
+
+            if($unidade->wasRecentlyCreated) {
+                Log::channel('database')->info(OperationLog::CREATED, ['user' => \Auth::user(), 'funcionalidade' => 'Unidade',  'new' => $unidade]);
+            } else {
+                Log::channel('database')->info(OperationLog::UPDATED, ['user' => \Auth::user(), 'funcionalidade' => 'Unidade',  'new' => $unidade, 'old' => $old_unidade]);
+            }
         } catch(\Illuminate\Database\QueryException $e) {
             return back()->withErrors('Código de disciplina já cadastrado no banco de dados!')->withInput($request->all());
         }
@@ -91,7 +102,9 @@ class UnidadeController extends Controller
     {
         if(!empty($id)) {
             $unidade = Unidade::findOrfail($id);
+            $old_unidade = clone($unidade);
             $unidade->delete();
+            Log::channel('database')->info(OperationLog::DELETED, ['user' => \Auth::user(), 'funcionalidade' => 'Unidade',  'old' => $old_unidade]);
         }
 
         $req->session()->flash('message', 'Unidade excluída com sucesso!');
