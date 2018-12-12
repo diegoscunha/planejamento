@@ -372,3 +372,78 @@ function montar_tabela_horarios(tbody, dados) {
         $(tbody).append(linha);
     });
 }
+
+function montar_tabela_detalhes_unidade(tbody, dados) {
+    tbody.html('');
+    $.each(dados, function(i, value){
+        linha = "<tr>";
+        linha += "<th scope='row'>" + value.numero_sala + "</th>";
+        linha += "<td>" + value.tipo_sala + "</td>";
+        linha += "<td>" + value.qtd_disciplinas + "</td>";
+        linha += "<td>" + value.qtd_turmas + "</td>";
+        linha += "<td>" + value.qtd_aulas + "</td>";
+        linha += "<td>";
+        linha += '<div class="clearfix">';
+        linha += '<div class="float-left">';
+        linha += '<strong>' + value.tx + '%</strong>'
+        linha += '</div>';
+        linha += '</div>';
+        linha += '<div class="progress progress-xs">';
+        linha += '<div class="progress-bar ' + value.percent_class + '" role="progressbar" style="width: ' + value.tx + '%" aria-valuenow="' + value.tx + '" aria-valuemin="0" aria-valuemax="100"></div>';
+        linha += '</div>';
+        linha += '</td>';
+        linha += "</tr>";
+        $(tbody).append(linha);
+    });
+}
+
+function montar_mapa_calor(tbody, dados) {
+    $.each(dados.mapa_calor, function(i, value){
+        $.each(value, function(x, qtd) {
+            if(i==2) {
+              $('#seg-' + x).text(qtd);
+              //$('#seg-' + x).addClass(class_mapa_calor(qtd, dados.qtd_salas));
+              $('#seg-' + x).attr('class', class_mapa_calor(qtd, dados.qtd_salas));
+            } else if(i==3) {
+              $('#ter-' + x).text(qtd);
+              //$('#ter-' + x).addClass(class_mapa_calor(qtd, dados.qtd_salas));
+              $('#ter-' + x).attr('class', class_mapa_calor(qtd, dados.qtd_salas));
+            } else if(i==4) {
+              $('#qua-' + x).text(qtd);
+              //$('#qua-' + x).addClass(class_mapa_calor(qtd, dados.qtd_salas));
+              $('#qua-' + x).attr('class', class_mapa_calor(qtd, dados.qtd_salas));
+            } else if(i==5) {
+              $('#qui-' + x).text(qtd);
+              //$('#qui-' + x).addClass(class_mapa_calor(qtd, dados.qtd_salas));
+              $('#qui-' + x).attr('class', class_mapa_calor(qtd, dados.qtd_salas));
+            } else if(i==6) {
+              $('#sex-' + x).text(qtd);
+              //$('#sex-' + x).addClass(class_mapa_calor(qtd, dados.qtd_salas));
+              $('#sex-' + x).attr('class', class_mapa_calor(qtd, dados.qtd_salas));
+            }
+        });
+    });
+}
+
+function class_mapa_calor(value, total) {
+    bg_class = '';
+    if(value > total) {
+        bg_class = "superior";
+    } else if(value == total) {
+        bg_class = "igual";
+    } else {
+        x = total / 5;
+        if(value >= 0 && value <= x) {
+            bg_class = "primeira";
+        } else if(value >= (x + 1) && value <= (x * 2)) {
+            bg_class = "segunda";
+        } else if(value >= (x * 2 + 1) && value <= (x *3)) {
+            bg_class = "terceira";
+        } else if(value >= (x * 3 + 1) && value <= (x *4)) {
+            bg_class = "quarta";
+        } else {
+            bg_class = "quinta";
+        }
+    }
+    return bg_class;
+}

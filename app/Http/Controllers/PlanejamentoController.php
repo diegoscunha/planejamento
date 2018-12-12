@@ -349,9 +349,10 @@ class PlanejamentoController extends Controller
               abort(404);
           }
           $unidades = DB::select("select t.unidade,
-                                  	   sum(case when t.descricao='qtd_salas' then total else 0 end) as qtd_salas,
-                                  	   sum(case when t.descricao='qtd_turmas' then total else 0 end) as qtd_turmas,
-                                       sum(case when t.descricao='qtd_disciplinas' then total else 0 end) as qtd_disciplinas
+                                         u.nome,
+                                  	     sum(case when t.descricao='qtd_salas' then total else 0 end) as qtd_salas,
+                                  	     sum(case when t.descricao='qtd_turmas' then total else 0 end) as qtd_turmas,
+                                         sum(case when t.descricao='qtd_disciplinas' then total else 0 end) as qtd_disciplinas
                                   from (select unidade, 'qtd_salas' as descricao, count(numero_sala) as total
                                         from (select unidade, numero_sala from calendars where periodo_letivo = ? and unidade in(select codigo from unidades) group by numero_sala, unidade) salas
                                         group by unidade
@@ -363,8 +364,9 @@ class PlanejamentoController extends Controller
                                         select unidade, 'qtd_disciplinas' as descricao, count(codigo_disciplina) as total
                                         from (select unidade, codigo_disciplina from calendars where periodo_letivo = ? and unidade in(select codigo from unidades) group by codigo_disciplina, unidade) disciplinas
                                         group by unidade) t
-                                  group by unidade
-                                  order by t.unidade", [$periodo_letivo,$periodo_letivo,$periodo_letivo]);
+                                  inner join unidades u on u.codigo=t.unidade
+                                  group by t.unidade, u.nome
+                                  order by t.unidade", [$periodo_letivo, $periodo_letivo, $periodo_letivo]);
           $planejamento = new \stdClass();
           $planejamento->semestre = format_periodo_letivo($periodo_letivo);
           $planejamento->unidades = $unidades;
@@ -374,6 +376,99 @@ class PlanejamentoController extends Controller
                 'Detalhes Planejamento' => ''
           ];
           return view('adm.planejamento.detalhes', ['breadcrumb' => $breadcrumb, 'planejamento' => $planejamento]);
+    }
+    /**
+     * Busca informações de detalhes para a unidade desejada
+     *
+     * @param int $periodo_letivo
+     * @param string $unidade
+     * @return \Illuminate\Http\Response
+     */
+    public function detalhes_unidade($periodo_letivo, $unidade)
+    {
+        if (!$this->isExist($periodo_letivo)) {
+            abort(404);
+        }
+        $salas = DB::select("select t.numero_sala,
+                               t.tipo_sala,
+                               sum(case when t.descricao='qtd_aulas' then total else 0 end) as qtd_aulas,
+                               sum(case when t.descricao='qtd_turmas' then total else 0 end) as qtd_turmas,
+                               sum(case when t.descricao='qtd_disciplinas' then total else 0 end) as qtd_disciplinas
+                            from (select numero_sala, tipo_sala, 'qtd_aulas' as descricao, count(numero_sala) as total
+                            		from (select numero_sala, tipo_sala, codigo_disciplina from calendars where periodo_letivo=:periodo_letivo1 and unidade=:unidade1 and numero_sala!='0') aulas
+                            		group by numero_sala, tipo_sala
+                            		union
+                            		select numero_sala, tipo_sala, 'qtd_turmas' as descricao, count(turma) as total
+                            		from (select numero_sala, tipo_sala, turma from calendars where periodo_letivo=:periodo_letivo2 and unidade=:unidade2 and numero_sala!='0' group by turma, numero_sala, tipo_sala) turmas
+                            		group by numero_sala, tipo_sala
+                            		union
+                            		select numero_sala, tipo_sala, 'qtd_disciplinas' as descricao, count(codigo_disciplina) as total
+                            		from (select numero_sala, tipo_sala, codigo_disciplina from calendars where periodo_letivo=:periodo_letivo3 and unidade=:unidade3 and numero_sala!='0' group by codigo_disciplina, numero_sala, tipo_sala) disciplinas
+                            		group by numero_sala, tipo_sala) t
+                            group by t.numero_sala, t.tipo_sala
+                            order by t.numero_sala", ['periodo_letivo1' => $periodo_letivo,
+                                                      'periodo_letivo2' => $periodo_letivo,
+                                                      'periodo_letivo3' => $periodo_letivo,
+                                                      'unidade1' => $unidade,
+                                                      'unidade2' => $unidade,
+                                                      'unidade3' => $unidade]);
+
+        foreach ($salas as $value) {
+            $value->tx = number_format(($value->qtd_aulas*100)/80, 2);
+            if($value->tx <= 40)
+                $value->percent_class = 'bg-danger';
+            elseif ($value->tx >= 40 && $value->tx <= 80)
+                $value->percent_class = 'bg-warning';
+            else
+                $value->percent_class = 'bg-success';
+        }
+        return response()->json($salas, Response::HTTP_OK);
+    }
+    /**
+     * Retorna informações para gerar o mapa calor
+     *
+     * @param int $periodo_letivo
+     * @param string $unidade
+     * @return \Illuminate\Http\Response
+     */
+    public function mapa_calor($periodo_letivo, $unidade)
+    {
+        $horarios = array_fill_keys(array_keys(\App\Hora::$horarios), 0);
+        if (!$this->isExist($periodo_letivo)) {
+            abort(404);
+        }
+        $result = DB::table('calendars as c')
+                      ->select('c.dia_semana', 'c.hora_inicial', 'c.hora_final') //, DB::raw('count(c.hora_inicial) as qtd'))
+                      ->where('c.periodo_letivo', $periodo_letivo)
+                      ->where('c.unidade', $unidade)
+                      ->whereIn('c.dia_semana', ['2','3','4','5','6']) // dias da semanas numerado
+                      //->groupBy('c.dia_semana', 'c.hora_inicial', 'c.hora_final')
+                      ->orderBy('c.dia_semana')
+                      ->orderBy(DB::raw('cast(c.hora_inicial as unsigned integer)'))
+                      ->orderBy(DB::raw('cast(c.hora_final as unsigned integer)'))
+                      ->get();
+        $result = collect($result)->map(function($x){ return (array) $x; });
+        $result = $result->groupBy('dia_semana');
+        $mapa_calor = [2 => $horarios, 3 => $horarios, 4 => $horarios, 5 => $horarios, 6 => $horarios];
+
+        foreach ($result as $key => $dia) {
+            foreach ($dia as $aula) {
+                $x = horarios_remover(format_hora($aula['hora_inicial']), format_hora($aula['hora_final']));
+                foreach ($x as $value) {
+                    $h = (int) $value;
+                    $mapa_calor[$key][$h]++;
+                }
+            }
+        }
+
+        $qtd_salas = DB::table('calendars as c')
+                        ->selectRaw('count(distinct c.numero_sala) as qtd_salas')
+                        ->where('c.periodo_letivo', $periodo_letivo)
+                        ->where('c.unidade', $unidade)
+                        ->where('c.numero_sala', '!=', '0')
+                        ->value('qtd_salas');
+        $response = ['mapa_calor' => $mapa_calor, 'qtd_salas' => $qtd_salas];
+        return response()->json($response, Response::HTTP_OK);
     }
     /**
      * Verifica se existe o planejamento para o periodo letivo informado
@@ -512,7 +607,7 @@ class PlanejamentoController extends Controller
                     ->get();
         $result = collect($result)->map(function($x){ return (array) $x; });
         $salasgroup = $result->groupBy('dia_semana');
-
+        dd($salasgroup->get(4));
         $ociosos = [];
         for ($i=2;$i<=7;$i++) {
             $lista = $salasgroup->get($i);

@@ -1,5 +1,24 @@
 $(document).ready(function() {
 
+    $('#unidade_det').change(function(){
+        semestre = $('#semestre').val().replace('.','');
+        unidade = $(this).val();
+        if(unidade!='') {
+            $('#tb-detalhes').loading({
+                message: 'Carregando...'
+            });
+            $('.titulo-unidade').html($('#unidade_det :selected').text());
+            var salas = ajax('GET', '/adm/planejamento/detalhes-unidade/' + semestre + '/'+unidade, {});
+            montar_tabela_detalhes_unidade($('#tb-detalhes > tbody'), salas);
+            var mapa_calor = ajax('GET', '/adm/planejamento/mapa-calor/' + semestre + '/'+unidade, {});
+            montar_mapa_calor($('#tb-mapa-calor > tbody'), mapa_calor);
+            $('#info-detalhes').show();
+            $('#tb-detalhes').loading('stop');
+        } else {
+            $('#info-detalhes').hide();
+        }
+    });
+
     $('#gerar_r').click(function(evt){
         evt.preventDefault();
 

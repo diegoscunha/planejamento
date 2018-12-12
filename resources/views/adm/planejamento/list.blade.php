@@ -54,9 +54,9 @@
                       <strong>{{ $planejamento->percent }}%</strong>
                     </div>
                   </div>
-                <div class="progress progress-xs">
-                  <div class="progress-bar {{ $planejamento->percent_class }}" role="progressbar" style="width: {{ $planejamento->percent }}%" aria-valuenow="{{ $planejamento->percent }}" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
+                  <div class="progress progress-xs">
+                    <div class="progress-bar {{ $planejamento->percent_class }}" role="progressbar" style="width: {{ $planejamento->percent }}%" aria-valuenow="{{ $planejamento->percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
                 </td>
                 @if($planejamento->status==1)
                 <td><span class="badge badge-success">Liberado</span></td>

@@ -23,6 +23,8 @@ Route::get('/adm/planejamento/relatorio/{semestre}/{unidade}', 'PlanejamentoCont
 
 Route::get('/adm/planejamento/excluir/{periodo_letivo}', 'PlanejamentoController@delete')->where('periodo_letivo', '[0-9]+')->middleware('auth')->name('excluir-planejamento');
 Route::get('/adm/planejamento/detalhes/{periodo_letivo}', 'PlanejamentoController@detalhes')->where('periodo_letivo', '[0-9]+')->middleware('auth')->name('detalhes-planejamento');
+Route::get('/adm/planejamento/detalhes-unidade/{periodo_letivo}/{unidade}', 'PlanejamentoController@detalhes_unidade')->where('periodo_letivo', '[0-9]+')->middleware('auth');
+Route::get('/adm/planejamento/mapa-calor/{periodo_letivo}/{unidade}', 'PlanejamentoController@mapa_calor')->where('periodo_letivo', '[0-9]+')->middleware('auth');
 
 Route::get('/planejamento/obter-unidades/json', 'PlanejamentoController@obter_unidades');
 Route::get('/planejamento/obter-salas/json', 'PlanejamentoController@obter_salas');
