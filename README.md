@@ -29,6 +29,9 @@ Rodar as migrações para criar as tabelas do Banco de dados.
 php artisan migrate
 ```
 Acessar o link locahost:8000 no navegador de sua preferência.
-Utilizar as credencias de acesso .
-admin@admin.com.br .
-123456 .
+
+Utilizar as credencias de acesso.
+
+email: admin@admin.com.br
+
+senha: 123456
