@@ -453,3 +453,32 @@ function class_mapa_calor(value, total) {
     }
     return bg_class;
 }
+
+function carregar_detalhes_unidades(semestre, unidade) {
+    ajaxAsync('GET', '/adm/planejamento/detalhes-unidade/' + semestre + '/'+unidade, '#tb-detalhes', montar_tabela_detalhes_unidade);
+    ajaxAsync('GET', '/adm/planejamento/disciplinas-unidade/' + semestre + '/'+unidade, '#tb-disciplinas', montar_tabela_disicplinas_unidade)
+    ajaxAsync('GET', '/adm/planejamento/mapa-calor/' + semestre + '/'+unidade, '#tb-mapa-calor', montar_mapa_calor)
+}
+
+function ajaxAsync(method, url, table, funcao) {
+  $.ajax({
+      type: method,
+      url: url,
+      data: {},
+      async: true,
+      beforeSend: function() {
+          $(table).loading({
+              message: 'Carregando...'
+          });
+      },
+      complete: function() {
+          $(table).loading('stop');
+      },
+      success: function(data){
+          funcao($(table + '> tbody'), data);
+      },
+      error: function(msg){
+          swal({text: msg});
+        }
+  });
+}

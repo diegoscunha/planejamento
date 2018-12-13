@@ -5,18 +5,8 @@ $(document).ready(function() {
         semestre = $('#semestre').val().replace('.','');
         unidade = $(this).val();
         if(unidade!='') {
-            $('body').loading({
-                message: 'Carregando...'
-            });
-            $('.titulo-unidade').html($('#unidade_det :selected').text());
-            var salas = ajax('GET', '/adm/planejamento/detalhes-unidade/' + semestre + '/'+unidade, {});
-            montar_tabela_detalhes_unidade($('#tb-detalhes > tbody'), salas);
-            var disciplinas = ajax('GET', '/adm/planejamento/disciplinas-unidade/' + semestre + '/'+unidade, {});
-            montar_tabela_disicplinas_unidade($('#tb-disciplinas > tbody'), disciplinas);
-            var mapa_calor = ajax('GET', '/adm/planejamento/mapa-calor/' + semestre + '/'+unidade, {});
-            montar_mapa_calor($('#tb-mapa-calor > tbody'), mapa_calor);
+            carregar_detalhes_unidades(semestre, unidade);
             $('#info-detalhes').show();
-            $('body').loading('stop');
         } else {
             $('#info-detalhes').hide();
         }
