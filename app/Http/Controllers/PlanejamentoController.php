@@ -607,7 +607,7 @@ class PlanejamentoController extends Controller
                     ->get();
         $result = collect($result)->map(function($x){ return (array) $x; });
         $salasgroup = $result->groupBy('dia_semana');
-        dd($salasgroup->get(4));
+        
         $ociosos = [];
         for ($i=2;$i<=7;$i++) {
             $lista = $salasgroup->get($i);
