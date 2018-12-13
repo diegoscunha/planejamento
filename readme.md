@@ -1,2 +1,0 @@
-# planejamento
-Planejamento Acadêmico
