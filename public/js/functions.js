@@ -185,7 +185,7 @@ function init_ajustar(events) {
     ];
 
     scheduler.config.lightbox.sections=[
-        { name: "Semestre", map_to:"periodo_letivo", type:"textarea" },
+        { name: "Semestre", height: 20, map_to:"periodo_letivo", type:"textarea" },
         { name: "Unidade", map_to: "unidade", type: "textarea" },
         { name: "Turma", map_to: "turma", type: "textarea" },
         { name: "Sala", map_to: "numero_sala", type: "textarea" },
@@ -193,9 +193,15 @@ function init_ajustar(events) {
         { name: "Disciplina", map_to:"text", type:"textarea" },
         { name: "Docente", map_to: "docente", type: "textarea" },
         { name: "Dia", map_to:"dia_semana", type:"select", options: dias  },
-        { name: "time", type:"time", map_to:"auto", time_format: [ "%d", "%m", "%Y", "%H:%i"] }
+        { name: "Horário", type:"time", map_to:"auto", time_format: [ "%d", "%m", "%Y", "%H:%i"] }
     ];
 
+    scheduler.attachEvent("onLightbox", function (id){
+        $('.dhx_lightbox_day_select').hide();
+        $('.dhx_lightbox_month_select').hide();
+        $('.dhx_lightbox_year_select').hide();
+    });
+    
     scheduler.config.touch = "force";
 
     scheduler.attachEvent("onLightbox", function (id){
@@ -309,12 +315,12 @@ function init_grid_ajuste() {
 
     //the path to images required by grid
     mygrid.setImagePath("./codebase/imgs/");
-    mygrid.setHeader("Id,Disciplina,Dia,DiaNum,HoraInicial,HoraFinal,Semestre,Unidade,Docente,Horário,Ação");//the headers of columns
-    mygrid.setInitWidths("150,150,155,120");          //the widths of columns
-    mygrid.setColAlign("left,left,left,left,left,left,left,left,left,left,left");       //the alignment of columns
-    mygrid.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro");                //the types of columns
-    mygrid.setColSorting("int,str,str,str,str,str,str,str,str,str,str");          //the sorting types
-    mygrid.setColumnIds("id,codigo_disciplina,dia_semana_ext,dia_semana,hora_inicial,hora_final,periodo_letivo,unidade,docente,horario,acao");
+    mygrid.setHeader("Id,Disciplina,Dia,DiaNum,HoraInicial,HoraFinal,Semestre,Unidade,Docente,Turma,Horário,Ação");//the headers of columns
+    mygrid.setInitWidths("140,130,155,120");          //the widths of columns
+    mygrid.setColAlign("left,left,left,left,left,left,left,left,left,left,left,left");       //the alignment of columns
+    mygrid.setColTypes("ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro,ro");                //the types of columns
+    mygrid.setColSorting("int,str,str,str,str,str,str,str,str,str,str,str");          //the sorting types
+    mygrid.setColumnIds("id,codigo_disciplina,dia_semana_ext,dia_semana,hora_inicial,hora_final,periodo_letivo,unidade,docente,turma,horario,acao");
     mygrid.setColumnHidden(0,true);
     mygrid.setColumnHidden(3,true);
     mygrid.setColumnHidden(4,true);
@@ -322,6 +328,7 @@ function init_grid_ajuste() {
     mygrid.setColumnHidden(6,true);
     mygrid.setColumnHidden(7,true);
     mygrid.setColumnHidden(8,true);
+    mygrid.setColumnHidden(9,true);
     mygrid.init();      //finishes initialization and renders the grid on the page
 
     mygrid.attachEvent("onRowSelect", function(id,ind){
@@ -332,7 +339,7 @@ function init_grid_ajuste() {
         $('#modal_periodo_letivo').html(disc.periodo_letivo);
         $('#modal_unidade').val(disc.unidade);
         $('#modal_docente').html(disc.docente);
-
+        $('#modal_turma').html(disc.turma);
         $('#modal_dia_semana').val(disc.dia_semana);
         $('#modal_hora_inicial').val(disc.hora_inicial);
         $('#modal_hora_final').val(disc.hora_final);

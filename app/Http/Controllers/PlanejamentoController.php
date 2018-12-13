@@ -264,8 +264,8 @@ class PlanejamentoController extends Controller
     public function getNaoAlocadas($periodo_letivo, $unidade)
     {
         $reusult = DB::table('calendars')
-                            ->select('id', 'codigo_disciplina', 'dia_semana_ext', 'dia_semana', 'hora_inicial', 'hora_final',
-                            'periodo_letivo', 'unidade', 'docente')
+                            ->select('id', 'codigo_disciplina','dia_semana_ext', 'dia_semana', 'hora_inicial', 'hora_final',
+                            'periodo_letivo', 'unidade', 'docente', 'turma')
                             ->where('periodo_letivo', $periodo_letivo)
                             ->where('unidade', $unidade)
                             ->where('numero_sala', '0')

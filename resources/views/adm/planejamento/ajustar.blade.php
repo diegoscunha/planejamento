@@ -7,6 +7,19 @@
         exportScheduler(type, $('#unidade').val(), $('#sala').val());
     }
 </script>
+<link rel="stylesheet" href="{{ asset('css/teste.css') }}">
+<style media="screen">
+    div.dhx_wrap_section {
+        margin: 0 0 0 0px !important;
+    }
+    div.dhx_cal_ltext {
+        padding: 4px 0 0 4px !important;
+    }
+    .dhx_cal_ltext textarea {
+        line-height: 10px !important;
+        padding: 6px 0 0 6px !important;
+    }
+</style>
 <div class="container">
    <div class="card">
       <div class="card-body">
@@ -118,8 +131,11 @@
                                        </div>
                                     </div>
                                     <div class="row">
-                                       <div class="col-md-12 col-form-label">
+                                       <div class="col-md-6 col-form-label">
                                           <label>Docente: <br><strong><span id="modal_docente"></span></strong></label>
+                                       </div>
+                                       <div class="col-md-6 col-form-label">
+                                          <label>Turma: <br><strong><span id="modal_turma"></span></strong></label>
                                        </div>
                                     </div>
                                     <div class="row">
@@ -175,17 +191,19 @@
                   </div>
                </div>
                <div class="row">
-                   <div id="btn-exports" class='controls'>
-                   		<button type="button" class="btn btn-sm btn-danger" onclick='exports("pdf")'>
-				                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF
-           						</button>
-                   		<button type="button" class="btn btn-sm btn-primary" onclick='exports("png")'>
-				                    <i class="fa fa-picture-o" aria-hidden="true"></i> PNG
-           						</button>
-                   		<button type="button" class="btn btn-sm btn-success" onclick='exports("excel")'>
-       							        <i class="fa fa-file-excel-o" aria-hidden="true"></i> Excel
-           						</button>
-             			</div>
+                 <div class="col-md-6">
+                     <div id="btn-exports" class='controls'>
+                     		<button type="button" class="btn btn-sm btn-danger" onclick='exports("pdf")'>
+  				                    <i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF
+             						</button>
+                     		<button type="button" class="btn btn-sm btn-primary" onclick='exports("png")'>
+  				                    <i class="fa fa-picture-o" aria-hidden="true"></i> PNG
+             						</button>
+                     		<button type="button" class="btn btn-sm btn-success" onclick='exports("excel")'>
+         							        <i class="fa fa-file-excel-o" aria-hidden="true"></i> Excel
+             						</button>
+               			</div>
+                  </div>
                </div>
                <div class="row">
                   <div class="col-md-12" style='width:1000px; height:800px; padding:0px;'>
