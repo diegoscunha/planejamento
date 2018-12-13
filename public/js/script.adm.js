@@ -1,19 +1,22 @@
 $(document).ready(function() {
 
-    $('#unidade_det').change(function(){
+    $('#unidade_det').change(function(evt){
+        evt.preventDefault();
         semestre = $('#semestre').val().replace('.','');
         unidade = $(this).val();
         if(unidade!='') {
-            $('#tb-detalhes').loading({
+            $('body').loading({
                 message: 'Carregando...'
             });
             $('.titulo-unidade').html($('#unidade_det :selected').text());
             var salas = ajax('GET', '/adm/planejamento/detalhes-unidade/' + semestre + '/'+unidade, {});
             montar_tabela_detalhes_unidade($('#tb-detalhes > tbody'), salas);
+            var disciplinas = ajax('GET', '/adm/planejamento/disciplinas-unidade/' + semestre + '/'+unidade, {});
+            montar_tabela_disicplinas_unidade($('#tb-disciplinas > tbody'), disciplinas);
             var mapa_calor = ajax('GET', '/adm/planejamento/mapa-calor/' + semestre + '/'+unidade, {});
             montar_mapa_calor($('#tb-mapa-calor > tbody'), mapa_calor);
             $('#info-detalhes').show();
-            $('#tb-detalhes').loading('stop');
+            $('body').loading('stop');
         } else {
             $('#info-detalhes').hide();
         }
@@ -212,8 +215,8 @@ $(document).ready(function() {
             var salas = ajax('GET', '/planejamento/obter-salas/json', {semestre: semestre, unidade: unidade});
 
             $.each(salas, function(i, sala) {
-                $('#sala').append($('<option>', {value: sala.numero_sala, text: 'Sala: ' + sala.numero_sala}));
-                $('#modal_sala').append($('<option>', {value: sala.numero_sala, text: 'Sala: ' + sala.numero_sala}));
+                $('#sala').append($('<option>', {value: sala.numero_sala, text: sala.numero_sala + ' - ' + sala.tipo_sala}));
+                $('#modal_sala').append($('<option>', {value: sala.numero_sala, text: sala.numero_sala + ' - ' + sala.tipo_sala}));
             });
             var disc = ajax('GET', '/api/planejamento/' + semestre + '/nao-alocadas/' + unidade);
             refresh_grid(disc);

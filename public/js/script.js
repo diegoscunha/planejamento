@@ -133,7 +133,7 @@ $(document).ready(function() {
             var salas = ajax('GET', '/planejamento/obter-salas/json', {semestre: semestre, unidade: unidade});
 
             $.each(salas, function(i, sala) {
-                $('#sala').append($('<option>', {value: sala.numero_sala, text: 'Sala: ' + sala.numero_sala}));
+                $('#sala').append($('<option>', {value: sala.numero_sala, text: sala.numero_sala + ' - ' + sala.tipo_sala}));
             });
             $('#sala').loading('stop');
         }

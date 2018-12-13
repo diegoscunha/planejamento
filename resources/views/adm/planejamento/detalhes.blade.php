@@ -57,11 +57,14 @@
                </div>
            </div>
          </div>
-         <div id="info-detalhes" class="row" style="display: none;"">
+         <div id="info-detalhes" class="row" style="display: none;">
               <div class="col-md-12">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                   <li class="nav-item">
                     <a class="nav-link active" id="detalhes-unidade-tab" data-toggle="tab" href="#detalhes-unidade" role="tab" aria-controls="detalhes-unidade" aria-selected="true">Detalhes unidade</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="disciplinas-unidade-tab" data-toggle="tab" href="#disciplinas-unidade" role="tab" aria-controls="disciplinas-unidade" aria-selected="true">Disciplinas unidade</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" id="mapa-calor-tab" data-toggle="tab" href="#mapa-calor" role="tab" aria-controls="mapa-calor" aria-selected="false">Mapa de Calor Unidade</a>
@@ -81,6 +84,22 @@
                                     <th>Turmas</th>
                                     <th>Aulas</th>
                                     <th>Taxa de utilização (%)</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="disciplinas-unidade" role="tabpanel" aria-labelledby="disciplinas-unidade-tab">
+                        <div class="col-12">
+                            <h5 class="titulo-unidade"></h5>
+                            <p class="text-muted">Lista de disciplinas da unidade selecionada</p>
+                            <table id="tb-disciplinas" class="table table-sm table-bordered table-hover">
+                                <thead>
+                                  <tr>
+                                    <th scope="col">Código</th>
+                                    <th>Nome</th>
                                   </tr>
                                 </thead>
                                 <tbody>

@@ -187,6 +187,7 @@ function init_ajustar(events) {
     scheduler.config.lightbox.sections=[
         { name: "Semestre", map_to:"periodo_letivo", type:"textarea" },
         { name: "Unidade", map_to: "unidade", type: "textarea" },
+        { name: "Turma", map_to: "turma", type: "textarea" },
         { name: "Sala", map_to: "numero_sala", type: "textarea" },
         { name: "Tipo sala", map_to: "tipo_sala", type: "textarea" },
         { name: "Disciplina", map_to:"text", type:"textarea" },
@@ -397,28 +398,33 @@ function montar_tabela_detalhes_unidade(tbody, dados) {
     });
 }
 
+function montar_tabela_disicplinas_unidade(tbody, dados) {
+    tbody.html('');
+    $.each(dados, function(i, value){
+        linha = "<tr>";
+        linha += "<th scope='row'>" + value.codigo_disciplina + "</th>";
+        linha += "<td>" + value.nome + "</td>";
+        $(tbody).append(linha);
+    });
+}
+
 function montar_mapa_calor(tbody, dados) {
     $.each(dados.mapa_calor, function(i, value){
         $.each(value, function(x, qtd) {
             if(i==2) {
               $('#seg-' + x).text(qtd);
-              //$('#seg-' + x).addClass(class_mapa_calor(qtd, dados.qtd_salas));
               $('#seg-' + x).attr('class', class_mapa_calor(qtd, dados.qtd_salas));
             } else if(i==3) {
               $('#ter-' + x).text(qtd);
-              //$('#ter-' + x).addClass(class_mapa_calor(qtd, dados.qtd_salas));
               $('#ter-' + x).attr('class', class_mapa_calor(qtd, dados.qtd_salas));
             } else if(i==4) {
               $('#qua-' + x).text(qtd);
-              //$('#qua-' + x).addClass(class_mapa_calor(qtd, dados.qtd_salas));
               $('#qua-' + x).attr('class', class_mapa_calor(qtd, dados.qtd_salas));
             } else if(i==5) {
               $('#qui-' + x).text(qtd);
-              //$('#qui-' + x).addClass(class_mapa_calor(qtd, dados.qtd_salas));
               $('#qui-' + x).attr('class', class_mapa_calor(qtd, dados.qtd_salas));
             } else if(i==6) {
               $('#sex-' + x).text(qtd);
-              //$('#sex-' + x).addClass(class_mapa_calor(qtd, dados.qtd_salas));
               $('#sex-' + x).attr('class', class_mapa_calor(qtd, dados.qtd_salas));
             }
         });

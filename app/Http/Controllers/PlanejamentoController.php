@@ -58,11 +58,11 @@ class PlanejamentoController extends Controller
         $periodo_letivo = $request->query('semestre');
         $unidade = $request->query('unidade');
         $salas = DB::table('calendars')
-                          ->select('numero_sala')
+                          ->select('numero_sala', 'tipo_sala')
                           ->where('periodo_letivo', $periodo_letivo)
                           ->where('unidade', $unidade)
                           ->where('numero_sala', '<>', '0')
-                          ->groupBy('numero_sala')
+                          ->groupBy('numero_sala','tipo_sala')
                           ->get();
 
         return response()->json($salas, Response::HTTP_OK);
@@ -233,6 +233,7 @@ class PlanejamentoController extends Controller
             $calendar_old = clone($calendar);
 
             $calendar->unidade = $request->data->unidade;
+            $calendar->turma = $request->data->turma;
             $calendar->numero_sala = $request->data->numero_sala;
             $calendar->tipo_sala = $request->data->tipo_sala;
 
@@ -425,6 +426,29 @@ class PlanejamentoController extends Controller
         return response()->json($salas, Response::HTTP_OK);
     }
     /**
+     * Busca informações das disciplinas de uma unidade desejada
+     *
+     * @param int $periodo_letivo
+     * @param string $unidade
+     * @return \Illuminate\Http\Response
+     */
+    public function detalhes_disciplinas_unidade($periodo_letivo, $unidade)
+    {
+        if (!$this->isExist($periodo_letivo)) {
+            abort(404);
+        }
+        $salas = DB::table('calendars as c')
+                    ->select('c.codigo_disciplina', 'd.nome')
+                    ->join('disciplinas as d','d.codigo','=','c.codigo_disciplina')
+                    ->where('c.periodo_letivo', $periodo_letivo)
+                    ->where('c.unidade', $unidade)
+                    ->groupBy('c.codigo_disciplina', 'd.nome')
+                    ->orderBy('c.codigo_disciplina')
+                    ->orderBy('d.nome')
+                    ->get();
+        return response()->json($salas, Response::HTTP_OK);
+    }
+    /**
      * Retorna informações para gerar o mapa calor
      *
      * @param int $periodo_letivo
@@ -438,11 +462,10 @@ class PlanejamentoController extends Controller
             abort(404);
         }
         $result = DB::table('calendars as c')
-                      ->select('c.dia_semana', 'c.hora_inicial', 'c.hora_final') //, DB::raw('count(c.hora_inicial) as qtd'))
+                      ->select('c.dia_semana', 'c.hora_inicial', 'c.hora_final')
                       ->where('c.periodo_letivo', $periodo_letivo)
                       ->where('c.unidade', $unidade)
                       ->whereIn('c.dia_semana', ['2','3','4','5','6']) // dias da semanas numerado
-                      //->groupBy('c.dia_semana', 'c.hora_inicial', 'c.hora_final')
                       ->orderBy('c.dia_semana')
                       ->orderBy(DB::raw('cast(c.hora_inicial as unsigned integer)'))
                       ->orderBy(DB::raw('cast(c.hora_final as unsigned integer)'))
@@ -607,7 +630,7 @@ class PlanejamentoController extends Controller
                     ->get();
         $result = collect($result)->map(function($x){ return (array) $x; });
         $salasgroup = $result->groupBy('dia_semana');
-        
+
         $ociosos = [];
         for ($i=2;$i<=7;$i++) {
             $lista = $salasgroup->get($i);
